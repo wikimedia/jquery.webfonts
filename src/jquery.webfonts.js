@@ -1,4 +1,6 @@
 (function($, window, document, undefined) {
+	"use strict";
+
 	var WebFonts = function(element, options) {
 		// Load defaults
 		this.options = $.extend({}, $.fn.webfonts.defaults, options);
@@ -8,24 +10,29 @@
 		this.originalFontFamily = this.$element.css('font-family');
 		this.init();
 	};
+
 	WebFonts.repository = {
 		base : 'fonts', // Relative or absolute path to the font repository.
 		languages : {}, // languages to font mappings
 		fonts : {}, // Font name to font configuration mapping
+
 		// Utility methods to work on the repository.
-		defaultFontForLanguage : function(language) {
+		defaultFont : function(language) {
 			var defaultFont;
 			if (this.languages[language]) {
 				return this.languages[language][0];
 			}
 			return defaultFont;
 		},
+
 		get : function(fontFamily) {
 			return this.fonts[fontFamily];
 		}
 	};
+
 	WebFonts.prototype = {
 		constructor : WebFonts,
+
 		/**
 		 * Initialize.
 		 */
@@ -33,29 +40,64 @@
 			var language, fontFamily;
 			language = this.$element.attr('lang') || $('html').attr('lang');
 			if (language) {
-				fontFamily = this.repository.defaultFontForLanguage(language);
+				fontFamily = this.repository.defaultFont(language);
 				this.apply(fontFamily);
 			}
+			this.parse();
 		},
+
 		/**
 		 * Apply a font for the element.
 		 * @param fontFamily String: font family name
 		 */
-		apply : function(fontFamily) {
+		apply : function(fontFamily, $element) {
 			var styleString, fontStack;
-			fontStack = ['Helvetica', 'Arial', 'sans-serif']
+			$element = $element || this.$element;
+			fontStack = this.options.fontStack;
 			console.log("Applying font family " + fontFamily);
-			if ($.inArray(fontFamily, this.fonts) === -1) {
-				styleString = this.getCSS(fontFamily);
-				if (styleString) {
-					injectCSS(styleString);
-				}
-				fontStack.unshift(fontFamily);
-				this.fonts.push(fontFamily);
-			}
-			this.$element.css('font-family', fontStack.join());
-			this.$element.find('textarea, input').css('font-family', fontStack.join());
+			this.load(fontFamily);
+			fontStack.unshift(fontFamily);
+			$element.css('font-family', fontStack.join());
+			$element.find('textarea, input').css('font-family', fontStack.join());
 		},
+		/**
+		 * Load a given fontFamily if not loaded already
+		 * @param fontFamily String font family name
+		 */
+		load : function(fontFamily) {
+			if ($.inArray(fontFamily, this.fonts) >= 0) {
+				return;
+			}
+			var styleString = this.getCSS(fontFamily);
+			if (styleString) {
+				injectCSS(styleString);
+			}
+			this.fonts.push(fontFamily);
+		},
+		/**
+		 * Parse the element for custom font-family styles and
+		 * for nodes with different language than element
+		 */
+		parse : function() {
+			var that = this;
+			that.$element.find('*[lang], [style], [class]').each(function(i, element) {
+				var $element = $(element), fontFamilyStyle, fontFamily;
+				fontFamilyStyle = $element.css('fontFamily');
+				if (fontFamilyStyle) {
+					fontFamily = fontFamilyStyle.split(',')[0]
+					// Remove the ' and " characters if any.
+					fontFamily = $.trim(fontFamily.replace(/["']/g, ''));
+					that.load(fontFamily);
+					// Font family overrides lang attribute
+					return;
+				}
+				if (element.lang && element.lang !== that.$element.attr('lang')) {
+					fontFamily = this.repository.defaultFont(element.lang);
+					that.apply(fontFamily, $(element));
+				}
+			});
+		},
+
 		/**
 		 * List all fonts for the given language
 		 * @param language mixed: [optional] language code. If undefined all fonts will
@@ -74,12 +116,14 @@
 			}
 			return fontNames;
 		},
+
 		/**
 		 * List all languages supported by the repository
 		 * @return Array language codes
 		 */
 		languages : function() {
-			var languages = [];
+			var language,
+				languages = [];
 			for (language in this.repository.languages ) {
 				if (this.repository.languages.hasOwnProperty(language)) {
 					languages.push(language);
@@ -93,18 +137,21 @@
 		setRepository : function(repository) {
 			this.repository = $.extend(WebFonts.repository, repository);
 		},
+
 		/**
 		 * Reset the font-family style.
 		 */
 		reset : function() {
 			this.apply(this.originalFontFamily);
 		},
+
 		/**
 		 * unbind the plugin
 		 */
 		unbind : function() {
 			this.$element.data('webfonts', null);
 		},
+
 		/**
 		 * Construct the CSS required for the font-family, inject it to the head of the
 		 * body so that it gets loaded.
@@ -113,6 +160,7 @@
 		 */
 		getCSS : function(fontFamily, variant) {
 			var fontconfig, base, version, versionSuffix, styleString, userAgent, fontStyle, fontFormats;
+
 			variant = variant || 'normal';
 			fontconfig = this.repository.get(fontFamily);
 			if (variant !== 'normal') {
@@ -124,6 +172,7 @@
 			if (!fontconfig) {
 				return false;
 			}
+
 			base = this.repository.base;
 			version = fontconfig.version;
 			versionSuffix = "?version=" + version + '&20120101';
@@ -160,6 +209,7 @@
 			return styleString;
 		}
 	};
+
 	$.fn.webfonts = function(option) {
 		return this.each(function() {
 			var $this, data, options;
@@ -167,16 +217,19 @@
 			data = $this.data('webfonts');
 			options = typeof option === 'object' && option;
 			if (!data) {
-				$this.data('webfonts', ( data = new WebFonts(this, options)));
+				$this.data('webfonts', (data = new WebFonts(this, options)));
 			}
-			if ( typeof option === 'string') {
+			if (typeof option === 'string') {
 				data[option]();
 			}
 		});
 	};
+
 	$.fn.webfonts.defaults = {
-		repository : WebFonts.repository
+		repository : WebFonts.repository, // Default font repository
+		fontStack : ['Helvetica', 'Arial', 'sans-serif'] // Default font fall back series
 	};
+
 	$.fn.webfonts.Constructor = WebFonts;
 
 	// Private methods for the WebFonts prototype
