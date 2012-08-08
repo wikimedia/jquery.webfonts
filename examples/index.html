@@ -57,7 +57,7 @@
 				$fontSelector.append($("<option></option>").text('Reset'));
 				$fontSelector.on('change', function() {
 					var font = $fontSelector.find('option:selected').val();
-					if (!font) {
+					if (font === 'Reset') {
 						$webfonts.reset();
 					} else {
 						$webfonts.apply(font);
