@@ -1,4 +1,6 @@
-(function($, window, document, undefined) {"use strict";
+(function($, window, document, undefined) {
+	"use strict";
+
 	var WebFonts = function(element, options) {
 		// Load defaults
 		this.options = $.extend({}, $.fn.webfonts.defaults, options);
@@ -6,10 +8,12 @@
 		this.repository = $.extend(WebFonts.repository, this.options.repository);
 		this.init();
 	};
+
 	WebFonts.repository = {
 		base : 'fonts', // Relative or absolute path to the font repository.
 		languages : {}, // languages to font mappings
 		fonts : {}, // Font name to font configuration mapping
+
 		// Utility methods to work on the repository.
 		defaultFontForLanguage : function(language) {
 			var defaultFont;
@@ -18,12 +22,15 @@
 			}
 			return defaultFont;
 		},
+
 		get : function(fontFamily) {
 			return this.fonts[fontFamily];
 		}
 	};
+
 	WebFonts.prototype = {
 		constructor : WebFonts,
+
 		/**
 		 * Initialize.
 		 */
@@ -35,6 +42,7 @@
 				this.apply(fontFamily);
 			}
 		},
+
 		/**
 		 * Apply a font for the element.
 		 * @param fontFamily String: font family name
@@ -51,6 +59,7 @@
 			this.$element.css('font-family', fontStack.join());
 			this.$element.find('textarea, input').css('font-family', fontStack.join());
 		},
+
 		/**
 		 * List all fonts for the given language
 		 * @param language mixed: [optional] language code. If undefined all fonts will
@@ -61,19 +70,22 @@
 			if (language) {
 				fontNames = this.repository.languages[language];
 			}
-			for ( fontName in this.repository.fonts) {
+			for (fontName in this.repository.fonts) {
 				if (this.repository.fonts.hasOwnProperty(fontName)) {
 					fontNames.push(fontName);
 				}
 			}
 			return fontNames;
 		},
+
 		reset : function() {
 
 		},
+
 		destroy : function() {
 			$(document).data('webfonts', null);
 		},
+
 		/**
 		 * Construct the CSS required for the font-family, inject it to the head of the
 		 * body so that it gets loaded.
@@ -82,6 +94,7 @@
 		 */
 		getCSS : function(fontFamily, variant) {
 			var fontconfig, base, version, versionSuffix, styleString, userAgent, fontStyle, fontFormats;
+
 			variant = variant || 'normal';
 			fontconfig = this.repository.get(fontFamily);
 			if (variant !== 'normal') {
@@ -93,6 +106,7 @@
 			if (!fontconfig) {
 				return false;
 			}
+
 			base = this.repository.base;
 			version = fontconfig.version;
 			versionSuffix = "?version=" + version + '&20120101';
@@ -129,6 +143,7 @@
 			return styleString;
 		}
 	};
+
 	$.fn.webfonts = function(option) {
 		return this.each(function() {
 			var $this, data, options;
@@ -136,16 +151,18 @@
 			data = $this.data('webfonts');
 			options = typeof option === 'object' && option;
 			if (!data) {
-				$this.data('webfonts', ( data = new WebFonts(this, options)));
+				$this.data('webfonts', (data = new WebFonts(this, options)));
 			}
-			if ( typeof option === 'string') {
+			if (typeof option === 'string') {
 				data[option]();
 			}
 		});
 	};
+
 	$.fn.webfonts.defaults = {
 		repository : WebFonts.repository
 	};
+
 	$.fn.webfonts.Constructor = WebFonts;
 
 	// Private methods for the WebFonts prototype
