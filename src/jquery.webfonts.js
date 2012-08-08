@@ -6,6 +6,8 @@
 		this.options = $.extend({}, $.fn.webfonts.defaults, options);
 		this.$element = $(element);
 		this.repository = $.extend(WebFonts.repository, this.options.repository);
+		this.fonts = [];
+		this.originalFontFamily = this.$element.css('font-family');
 		this.init();
 	};
 
@@ -51,11 +53,14 @@
 			var styleString, fontStack;
 			fontStack = ['Helvetica', 'Arial', 'sans-serif']
 			console.log("Applying font family " + fontFamily);
-			styleString = this.getCSS(fontFamily);
-			if (styleString) {
-				injectCSS(styleString);
+			if ($.inArray(fontFamily, this.fonts) === -1) {
+				styleString = this.getCSS(fontFamily);
+				if (styleString) {
+					injectCSS(styleString);
+				}
+				fontStack.unshift(fontFamily);
+				this.fonts.push(fontFamily);
 			}
-			fontStack.unshift(fontFamily);
 			this.$element.css('font-family', fontStack.join());
 			this.$element.find('textarea, input').css('font-family', fontStack.join());
 		},
@@ -64,6 +69,7 @@
 		 * List all fonts for the given language
 		 * @param language mixed: [optional] language code. If undefined all fonts will
 		 * be listed
+		 * @return Array font names array
 		 */
 		list : function(language) {
 			var fontNames = [], fontName;
@@ -78,12 +84,38 @@
 			return fontNames;
 		},
 
-		reset : function() {
-
+		/**
+		 * List all languages supported by the repository
+		 * @return Array language codes
+		 */
+		languages : function() {
+			var languages = [];
+			for (language in this.repository.languages ) {
+				if (this.repository.languages.hasOwnProperty(language)) {
+					languages.push(language);
+				}
+			}
+		},
+		/**
+		 * Set the font repository
+		 * @param {Object} repository The font repository.
+		 */
+		setRepository : function(repository) {
+			this.repository = $.extend(WebFonts.repository, repository);
 		},
 
-		destroy : function() {
-			$(document).data('webfonts', null);
+		/**
+		 * Reset the font-family style.
+		 */
+		reset : function() {
+			this.apply(this.originalFontFamily);
+		},
+
+		/**
+		 * unbind the plugin
+		 */
+		unbind : function() {
+			this.$element.data('webfonts', null);
 		},
 
 		/**
