@@ -1,0 +1,23 @@
+body {
+	padding-left: 25%;
+	padding-right: 25%;
+}
+div#container {
+	background-color: #fff;
+	padding: 20px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	font-size: 12pt;
+}
+input, textarea {
+	font-size: 12pt;
+	width: 95%;
+	padding : 10px;
+}
+textarea {
+	height: 100px;
+}
+div.fontselector{
+	float:right;
+}
