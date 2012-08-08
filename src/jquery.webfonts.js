@@ -87,6 +87,13 @@
 			}
 		},
 		/**
+		 * Set the font repository
+		 * @param {Object} repository The font repository.
+		 */
+		setRepository : function(repository) {
+			this.repository = $.extend(WebFonts.repository, repository);
+		},
+		/**
 		 * Reset the font-family style.
 		 */
 		reset : function() {

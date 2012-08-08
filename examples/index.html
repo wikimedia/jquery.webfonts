@@ -47,14 +47,14 @@
 				var $webfonts = $('div#container').data('webfonts');
 				var fonts = $webfonts.list();
 				// Also test system fonts.
-				$.merge(fonts, ['Courier','Sans', 'Serif', 'Monospace']);
+				$.merge(fonts, ['Courier', 'Sans', 'Serif', 'Monospace']);
 				$.each(fonts, function(key, font) {
 					$('select#fontselector').append($("<option></option>").attr("value", font).text(font));
 				});
-					$('select#fontselector').append($("<option></option>").text('Reset'));
-				$('select#fontselector').on( 'change', function(){
+				$('select#fontselector').append($("<option></option>").text('Reset'));
+				$('select#fontselector').on('change', function() {
 					var font = $('select#fontselector option:selected').val();
-					if ( !font ){
+					if (!font) {
 						$webfonts.reset();
 					} else {
 						$webfonts.apply(font);
