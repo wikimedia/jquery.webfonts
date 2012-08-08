@@ -5,6 +5,7 @@
 		this.$element = $(element);
 		this.repository = $.extend(WebFonts.repository, this.options.repository);
 		this.fonts = [];
+		this.originalFontFamily = this.$element.css('font-family');
 		this.init();
 	};
 	WebFonts.repository = {
@@ -85,11 +86,17 @@
 				}
 			}
 		},
+		/**
+		 * Reset the font-family style.
+		 */
 		reset : function() {
-
+			this.apply(this.originalFontFamily);
 		},
-		destroy : function() {
-			$(document).data('webfonts', null);
+		/**
+		 * unbind the plugin
+		 */
+		unbind : function() {
+			this.$element.data('webfonts', null);
 		},
 		/**
 		 * Construct the CSS required for the font-family, inject it to the head of the
