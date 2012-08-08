@@ -51,7 +51,7 @@
 		 */
 		apply : function(fontFamily) {
 			var styleString, fontStack;
-			fontStack = ['Helvetica', 'Arial', 'sans-serif']
+			fontStack = ['Helvetica', 'Arial', 'sans-serif'];
 			console.log("Applying font family " + fontFamily);
 			if ($.inArray(fontFamily, this.fonts) === -1) {
 				styleString = this.getCSS(fontFamily);
@@ -89,7 +89,8 @@
 		 * @return Array language codes
 		 */
 		languages : function() {
-			var languages = [];
+			var language,
+				languages = [];
 			for (language in this.repository.languages ) {
 				if (this.repository.languages.hasOwnProperty(language)) {
 					languages.push(language);
