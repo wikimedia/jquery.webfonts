@@ -51,7 +51,7 @@
 		 * @param fontFamily String: font family name
 		 */
 		apply : function(fontFamily, $element) {
-			var styleString, fontStack;
+			var fontStack;
 			$element = $element || this.$element;
 			fontStack = this.options.fontStack;
 			console.log("Applying font family " + fontFamily);
@@ -60,6 +60,7 @@
 			$element.css('font-family', fontStack.join());
 			$element.find('textarea, input').css('font-family', fontStack.join());
 		},
+
 		/**
 		 * Load a given fontFamily if not loaded already
 		 * @param fontFamily String font family name
@@ -74,6 +75,7 @@
 			}
 			this.fonts.push(fontFamily);
 		},
+
 		/**
 		 * Parse the element for custom font-family styles and
 		 * for nodes with different language than element
@@ -81,10 +83,12 @@
 		parse : function() {
 			var that = this;
 			that.$element.find('*[lang], [style], [class]').each(function(i, element) {
-				var $element = $(element), fontFamilyStyle, fontFamily;
+				var fontFamilyStyle, fontFamily,
+					$element = $(element);
+
 				fontFamilyStyle = $element.css('fontFamily');
 				if (fontFamilyStyle) {
-					fontFamily = fontFamilyStyle.split(',')[0]
+					fontFamily = fontFamilyStyle.split(',')[0];
 					// Remove the ' and " characters if any.
 					fontFamily = $.trim(fontFamily.replace(/["']/g, ''));
 					that.load(fontFamily);
@@ -97,6 +101,7 @@
 				}
 			});
 		},
+
 		/**
 		 * List all fonts for the given language
 		 * @param language mixed: [optional] language code. If undefined all fonts will
@@ -104,7 +109,9 @@
 		 * @return Array font names array
 		 */
 		list : function(language) {
-			var fontNames = [], fontName;
+			var fontName,
+				fontNames = [];
+
 			if (language) {
 				fontNames = this.repository.languages[language];
 			}
@@ -113,6 +120,7 @@
 					fontNames.push(fontName);
 				}
 			}
+
 			return fontNames;
 		},
 
@@ -129,6 +137,7 @@
 				}
 			}
 		},
+
 		/**
 		 * Set the font repository
 		 * @param {Object} repository The font repository.
