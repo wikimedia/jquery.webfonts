@@ -40,20 +40,23 @@
 
 						},
 						languages : {
-							en : ['Rufscript', 'UnifrakturMaguntia']
+							en : ['Sans', 'Rufscript', 'UnifrakturMaguntia']
 						}
 					}
 				})
+				// get an instance of WebFonts
 				var $webfonts = $('div#container').data('webfonts');
+				// Get a list of all fonts provided by WebFonts
 				var fonts = $webfonts.list();
 				// Also test system fonts.
 				$.merge(fonts, ['Courier', 'Sans', 'Serif', 'Monospace']);
+				var $fontSelector = $('select#fontselector');
 				$.each(fonts, function(key, font) {
-					$('select#fontselector').append($("<option></option>").attr("value", font).text(font));
+					$fontSelector.append($("<option></option>").attr("value", font).text(font));
 				});
-				$('select#fontselector').append($("<option></option>").text('Reset'));
-				$('select#fontselector').on('change', function() {
-					var font = $('select#fontselector option:selected').val();
+				$fontSelector.append($("<option></option>").text('Reset'));
+				$fontSelector.on('change', function() {
+					var font = $fontSelector.find('option:selected').val();
 					if (!font) {
 						$webfonts.reset();
 					} else {
@@ -79,6 +82,17 @@
 				<textarea>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
 				</textarea>
 				<input type="text" placeholder="Enter text here" />
+
+				<!-- We can define a webfont as font-family for an element using inline style. -->
+				<p style="font-family: Rufscript">
+					This is always shown in Rufscript font.
+				</p>
+
+				<!-- We can define a webfont as font-family for an element in external css
+				See style.css and definition of p.Unifraktur -->
+				<p class="Unifraktur">
+					This is always shown in UnifrakturMaguntia font.
+				</p>
 			</div>
 
 			<footer>
