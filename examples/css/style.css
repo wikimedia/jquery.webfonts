@@ -21,3 +21,6 @@ textarea {
 div.fontselector{
 	float:right;
 }
+p.Unifraktur {
+	font-family : UnifrakturMaguntia, arial, serif;
+}

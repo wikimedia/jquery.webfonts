@@ -17,7 +17,7 @@
 		fonts : {}, // Font name to font configuration mapping
 
 		// Utility methods to work on the repository.
-		defaultFontForLanguage : function(language) {
+		defaultFont : function(language) {
 			var defaultFont;
 			if (this.languages[language]) {
 				return this.languages[language][0];
@@ -40,29 +40,62 @@
 			var language, fontFamily;
 			language = this.$element.attr('lang') || $('html').attr('lang');
 			if (language) {
-				fontFamily = this.repository.defaultFontForLanguage(language);
+				fontFamily = this.repository.defaultFont(language);
 				this.apply(fontFamily);
 			}
+			this.parse();
 		},
 
 		/**
 		 * Apply a font for the element.
 		 * @param fontFamily String: font family name
 		 */
-		apply : function(fontFamily) {
+		apply : function(fontFamily, $element) {
 			var styleString, fontStack;
-			fontStack = ['Helvetica', 'Arial', 'sans-serif'];
+			$element = $element || this.$element;
+			fontStack = this.options.fontStack;
 			console.log("Applying font family " + fontFamily);
-			if ($.inArray(fontFamily, this.fonts) === -1) {
-				styleString = this.getCSS(fontFamily);
-				if (styleString) {
-					injectCSS(styleString);
-				}
-				fontStack.unshift(fontFamily);
-				this.fonts.push(fontFamily);
+			this.load(fontFamily);
+			fontStack.unshift(fontFamily);
+			$element.css('font-family', fontStack.join());
+			$element.find('textarea, input').css('font-family', fontStack.join());
+		},
+		/**
+		 * Load a given fontFamily if not loaded already
+		 * @param fontFamily String font family name
+		 */
+		load : function(fontFamily) {
+			if ($.inArray(fontFamily, this.fonts) >= 0) {
+				return;
 			}
-			this.$element.css('font-family', fontStack.join());
-			this.$element.find('textarea, input').css('font-family', fontStack.join());
+			var styleString = this.getCSS(fontFamily);
+			if (styleString) {
+				injectCSS(styleString);
+			}
+			this.fonts.push(fontFamily);
+		},
+		/**
+		 * Parse the element for custom font-family styles and
+		 * for nodes with different language than element
+		 */
+		parse : function() {
+			var that = this;
+			that.$element.find('*[lang], [style], [class]').each(function(i, element) {
+				var $element = $(element), fontFamilyStyle, fontFamily;
+				fontFamilyStyle = $element.css('fontFamily');
+				if (fontFamilyStyle) {
+					fontFamily = fontFamilyStyle.split(',')[0]
+					// Remove the ' and " characters if any.
+					fontFamily = $.trim(fontFamily.replace(/["']/g, ''));
+					that.load(fontFamily);
+					// Font family overrides lang attribute
+					return;
+				}
+				if (element.lang && element.lang !== that.$element.attr('lang')) {
+					fontFamily = this.repository.defaultFont(element.lang);
+					that.apply(fontFamily, $(element));
+				}
+			});
 		},
 
 		/**
@@ -193,7 +226,8 @@
 	};
 
 	$.fn.webfonts.defaults = {
-		repository : WebFonts.repository
+		repository : WebFonts.repository, // Default font repository
+		fontStack : ['Helvetica', 'Arial', 'sans-serif'] // Default font fall back series
 	};
 
 	$.fn.webfonts.Constructor = WebFonts;
