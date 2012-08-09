@@ -2,3 +2,16 @@ jquery.webfonts
 ===============
 
 jQuery based webfonts extension
+
+## Introduction
+
+jQuery WebFonts extension adds font embedding capability to jquery using the WebFonts technology. The extension provides a flexible way to choose font from a font repository and apply on html elements. 
+
+## Features
+
+* Flexible font repository. The extension can work with any font repository file system. See [more..](https://github.com/santhoshtr/jquery.webfonts/wiki/Font-Repository)
+* Provides many APIs to customize and extend. See [more...](https://github.com/santhoshtr/jquery.webfonts/wiki/API)
+* Applies font based on the html `lang` attribute of the elements
+* Make sure the font defined using `font-family` style for any elements, either using inline css or external css' available for the reader. - without any extra code. See [Examples](https://github.com/santhoshtr/jquery.webfonts/wiki/Examples)
+
+For examples, API, and usage information, please visit [wiki](https://github.com/santhoshtr/jquery.webfonts/wiki)
