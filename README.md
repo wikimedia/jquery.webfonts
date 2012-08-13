@@ -15,3 +15,14 @@ jQuery WebFonts extension adds font embedding capability to jquery using the Web
 * Make sure the font defined using `font-family` style for any elements, either using inline css or external css' available for the reader. - without any extra code. See [Examples](https://github.com/santhoshtr/jquery.webfonts/wiki/Examples)
 
 For examples, API, and usage information, please visit [wiki](https://github.com/santhoshtr/jquery.webfonts/wiki)
+
+## License
+
+You may use jquery.webfonts under the terms of either the MIT License or the GNU General
+Public License (GPL) Version 2 or later.
+
+See GPL-LICENSE and MIT-LICENSE for details.
+
+## Developers
+
+This project is part of Wikimedia Foundation's Project Milkshake. See https://www.mediawiki.org/wiki/Project_Milkshake
