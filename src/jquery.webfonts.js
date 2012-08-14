@@ -70,11 +70,10 @@
 		apply : function(fontFamily, $element) {
 			var fontStack;
 			$element = $element || this.$element;
-			fontStack = this.options.fontStack;
-			console.log("Applying font family " + fontFamily);
+			fontStack = this.options.fontStack.slice(0);
 			this.load(fontFamily);
 			fontStack.unshift(fontFamily);
-			$element.css('font-family', fontStack.join());
+			$element.css('font-family', fontStack.join() );
 			$element.find('textarea, input').css('font-family', fontStack.join());
 		},
 
@@ -131,13 +130,13 @@
 
 			if (language) {
 				fontNames = this.repository.languages[language];
-			}
-			for (fontName in this.repository.fonts) {
-				if (this.repository.fonts.hasOwnProperty(fontName)) {
-					fontNames.push(fontName);
+			} else {
+				for (fontName in this.repository.fonts) {
+					if (this.repository.fonts.hasOwnProperty(fontName)) {
+						fontNames.push(fontName);
+					}
 				}
 			}
-
 			return fontNames;
 		},
 
@@ -153,6 +152,7 @@
 					languages.push(language);
 				}
 			}
+			return languages;
 		},
 
 		/**
