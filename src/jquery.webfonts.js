@@ -68,11 +68,14 @@
 		 * @param fontFamily String: font family name
 		 */
 		apply : function(fontFamily, $element) {
-			var fontStack;
 			$element = $element || this.$element;
-			fontStack = this.options.fontStack.slice(0);
-			this.load(fontFamily);
-			fontStack.unshift(fontFamily);
+			var fontStack = this.options.fontStack.slice(0);
+			// Loading an empty string is pointless.
+			// Putting an empty string into a font-family list doesn't work with jQuery.css().
+			if ( fontFamily ) {
+				this.load(fontFamily);
+				fontStack.unshift(fontFamily);
+			}
 			$element.css('font-family', fontStack.join() );
 			$element.find('textarea, input').css('font-family', fontStack.join());
 		},
