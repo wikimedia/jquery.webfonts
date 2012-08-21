@@ -25,6 +25,7 @@
 		this.repository = $.extend(WebFonts.repository, this.options.repository);
 		this.fonts = [];
 		this.originalFontFamily = this.$element.css('font-family');
+		this.language = this.$element.attr('lang') || $('html').attr('lang');
 		this.init();
 	};
 
@@ -52,7 +53,7 @@
 
 		getFont: function(language){
 			if (this.options.fontSelector) {
-				return this.options.fontSelector(this.repository, language);
+				return this.options.fontSelector(this.repository, language || this.language);
 			} else {
 				return this.repository.defaultFont(language);
 			}
@@ -62,10 +63,9 @@
 		 * Initialize.
 		 */
 		init : function() {
-			var language, fontFamily;
-			language = this.$element.attr('lang') || $('html').attr('lang');
-			if (language) {
-				fontFamily = this.getFont(language);
+			var fontFamily;
+			if (this.language) {
+				fontFamily = this.getFont(this.language);
 				this.apply(fontFamily);
 			}
 			this.parse();
@@ -83,12 +83,12 @@
 		apply : function(fontFamily, $element) {
 			$element = $element || this.$element;
 			var fontStack = this.options.fontStack.slice(0);
-			if (!fontFamily) {
-				this.reset();
-				return;
+			// Loading an empty string is pointless.
+			// Putting an empty string into a font-family list doesn't work with jQuery.css().
+			if ( fontFamily ) {
+				this.load(fontFamily);
+				fontStack.unshift(fontFamily);
 			}
-			this.load(fontFamily);
-			fontStack.unshift(fontFamily);
 			$element.css('font-family', fontStack.join() );
 			$element.find('textarea, input').css('font-family', fontStack.join());
 		},
