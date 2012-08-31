@@ -32,7 +32,6 @@ test("Webfonts loading and application test", function(assert) {
 		expectedResetFontFamilyList = fontFamilyList(defaultFonts)
 			.concat(expectedResetFontFamilyList);
 	}
-	expectedResetFontFamilyList = expectedResetFontFamilyList.concat();
 
 	// Initialize document to language "my" to make webfonts work
 	$webfontsElement
