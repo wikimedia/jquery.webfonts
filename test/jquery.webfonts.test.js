@@ -18,10 +18,24 @@ function fontFamilyList(fontFamilyString) {
 }
 
 test("Webfonts loading and application test", function(assert) {
-	// Initialize document to language "my" to make webfonts work
 	var localFont = "Garamond",
+		fallbackFonts = "Helvetica, Arial, sans-serif",
+		expectedResetFontFamilyList = fontFamilyList(fallbackFonts),
 		$qunitFixture = $("<body>"),
-		$webfontsElement = $("<div id='webfonts-fixture'>")
+		$webfontsElement = $("<div id='webfonts-fixture'>"),
+		defaultFonts = $webfontsElement.css("font-family");
+
+	// Different fonts are the default in different browsers.
+	// Firefox assigns the default fonts from the preferences and
+	// Chrome doesn't assign anything.
+	if (defaultFonts !== "") {
+		expectedResetFontFamilyList = fontFamilyList(defaultFonts)
+			.concat(expectedResetFontFamilyList);
+	}
+	expectedResetFontFamilyList = expectedResetFontFamilyList.concat();
+
+	// Initialize document to language "my" to make webfonts work
+	$webfontsElement
 		.attr("lang", "my")
 		.webfonts({
 			repository: {
@@ -39,16 +53,15 @@ test("Webfonts loading and application test", function(assert) {
 				}
 			}
 		})
-		.appendTo($qunitFixture),
-		webfonts = $webfontsElement.data("webfonts"),
+		.appendTo($qunitFixture);
+
+	var webfonts = $webfontsElement.data("webfonts"),
 		fontName = webfonts.fonts[0],
-		$spanElement = $("<span>span content</span>").css("font-family", localFont),
-		$inputElement = $("<input value='input content' />"),
-		$textareaElement = $("<textarea>textarea content</textarea>"),
-		fallbackFonts = "Helvetica, Arial, sans-serif",
 		expectedFontFamilyValue = "'" + fontName + "', " + fallbackFonts,
 		expectedFontFamilyList = fontFamilyList(expectedFontFamilyValue),
-		expectedResetFontFamilyList = fontFamilyList(fallbackFonts);
+		$spanElement = $("<span>span content</span>").css("font-family", localFont),
+		$inputElement = $("<input value='input content' />"),
+		$textareaElement = $("<textarea>textarea content</textarea>");
 
 	$webfontsElement.append($spanElement, $inputElement, $textareaElement);
 
