@@ -25,6 +25,7 @@
 		this.repository = $.extend(WebFonts.repository, this.options.repository);
 		this.fonts = [];
 		this.originalFontFamily = this.$element.css('font-family');
+		this.language = this.$element.attr('lang') || $('html').attr('lang');
 		this.init();
 	};
 
@@ -35,9 +36,9 @@
 
 		// Utility methods to work on the repository.
 		defaultFont : function(language) {
-			var defaultFont;
+			var defaultFont = null;
 			if (this.languages[language]) {
-				return this.languages[language][0];
+				defaultFont = this.languages[language][0];
 			}
 			return defaultFont;
 		},
@@ -50,17 +51,29 @@
 	WebFonts.prototype = {
 		constructor : WebFonts,
 
+		getFont: function(language){
+			if (this.options.fontSelector) {
+				return this.options.fontSelector(this.repository, language || this.language);
+			} else {
+				return this.repository.defaultFont(language);
+			}
+		},
+
 		/**
 		 * Initialize.
 		 */
 		init : function() {
-			var language, fontFamily;
-			language = this.$element.attr('lang') || $('html').attr('lang');
-			if (language) {
-				fontFamily = this.repository.defaultFont(language);
+			var fontFamily;
+			if (this.language) {
+				fontFamily = this.getFont(this.language);
 				this.apply(fontFamily);
 			}
 			this.parse();
+		},
+
+		refresh: function() {
+			this.reset();
+			this.init();
 		},
 
 		/**
@@ -86,13 +99,17 @@
 		 */
 		load : function(fontFamily) {
 			if ($.inArray(fontFamily, this.fonts) >= 0) {
-				return;
+				return true;
 			}
 			var styleString = this.getCSS(fontFamily);
 			if (styleString) {
 				injectCSS(styleString);
+			} else {
+				// Font not found
+				return false;
 			}
 			this.fonts.push(fontFamily);
+			return true;
 		},
 
 		/**
@@ -110,12 +127,16 @@
 					fontFamily = fontFamilyStyle.split(',')[0];
 					// Remove the ' and " characters if any.
 					fontFamily = $.trim(fontFamily.replace(/["']/g, ''));
-					that.load(fontFamily);
-					// Font family overrides lang attribute
-					return;
+					if (that.load(fontFamily)){
+						// Font family overrides lang attribute
+						// But was it the fontfamily allocated for the current language?
+						if (fontFamily === that.getFont(element.lang)) {
+							return true;
+						}
+					}
 				}
 				if (element.lang && element.lang !== that.$element.attr('lang')) {
-					fontFamily = this.repository.defaultFont(element.lang);
+					fontFamily = that.getFont(element.lang);
 					that.apply(fontFamily, $(element));
 				}
 			});
@@ -128,7 +149,7 @@
 		 * @return Array font names array
 		 */
 		list : function(language) {
-			var fontName,
+			var fontName = null,
 				fontNames = [];
 
 			if (language) {
@@ -148,7 +169,7 @@
 		 * @return Array language codes
 		 */
 		languages : function() {
-			var language,
+			var language = null,
 				languages = [];
 			for (language in this.repository.languages ) {
 				if (this.repository.languages.hasOwnProperty(language)) {
