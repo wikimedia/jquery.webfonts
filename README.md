@@ -16,6 +16,19 @@ jQuery WebFonts extension adds font embedding capability to jquery using the Web
 
 For examples, API, and usage information, please visit [wiki](https://github.com/santhoshtr/jquery.webfonts/wiki)
 
+## Test
+
+Before you can run the tests, make sure the submodules are updated:
+```
+git submodule update --init
+```
+
+Then open up `./test/index.html` in your browser.
+
+Some browsers will not be able to load JSON using AJAX if you run
+the tests as local files (file://), so you should run them from
+a web server (http://).
+
 ## License
 
 You may use jquery.webfonts under the terms of either the MIT License or the GNU General
