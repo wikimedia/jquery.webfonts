@@ -24,3 +24,7 @@ div.fontselector{
 p.Unifraktur {
 	font-family : UnifrakturMaguntia, arial, serif;
 }
+
+.webfonts-exclude {
+	font-family : monospace;
+}

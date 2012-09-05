@@ -1,108 +1,94 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8" />
-
-		<!-- Always force latest IE rendering engine (even in intranet) & Chrome Frame
-		Remove this if you use the .htaccess -->
-		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-
-		<title>jQuery WebFonts Example</title>
-		<meta name="description" content="" />
-		<meta name="author" content="Santhosh Thottingal" />
-
-		<meta name="viewport" content="width=device-width; initial-scale=1.0" />
-
-		<!-- Replace favicon.ico & apple-touch-icon.png in the root of your domain and delete these references -->
-		<link rel="shortcut icon" href="/favicon.ico" />
-		<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-		<link href="css/style.css" rel="stylesheet"/>
-		<script src="js/jquery.js"></script>
-		<script src="../src/jquery.webfonts.js"></script>
-		<script>
-			$(document).ready(function() {
-				$('div#container').webfonts({
-					repository : {
-						base : 'fonts/',
-						fonts : {
-							"Rufscript" : {
-								eot : "Rufscript.eot",
-								ttf : "Rufscript.ttf",
-								woff : "Rufscript.woff",
-								version : "0.1"
-							},
-							"UnifrakturMaguntia" : {
-								eot : "UnifrakturMaguntia.eot",
-								ttf : "UnifrakturMaguntia.ttf",
-								woff : "UnifrakturMaguntia.woff",
-								version : "2012-02-11"
-							}
-
-						},
-						languages : {
-							en : ['Sans', 'Rufscript', 'UnifrakturMaguntia']
-						}
+<head>
+<meta charset="utf-8" />
+<title>jQuery WebFonts Example</title>
+<meta name="author" content="Santhosh Thottingal" />
+<link href="css/style.css" rel="stylesheet" />
+<script src="js/jquery.js"></script>
+<script src="../src/jquery.webfonts.js"></script>
+<script>
+		
+	$( document ).ready( function() {
+		$( 'div#container' ).webfonts( {
+			repository: {
+				base: 'fonts/',
+				fonts: {
+					"Rufscript": {
+						eot: "Rufscript.eot",
+						ttf: "Rufscript.ttf",
+						woff: "Rufscript.woff",
+						version: "0.1"
+					},
+					"UnifrakturMaguntia": {
+						eot: "UnifrakturMaguntia.eot",
+						ttf: "UnifrakturMaguntia.ttf",
+						woff: "UnifrakturMaguntia.woff",
+						version: "2012-02-11"
 					}
-				})
-				// get an instance of WebFonts
-				var $webfonts = $('div#container').data('webfonts');
-				// Get a list of all fonts provided by WebFonts
-				var fonts = $webfonts.list();
-				// Also test system fonts.
-				$.merge(fonts, ['Courier', 'Sans', 'Serif', 'Monospace']);
-				var $fontSelector = $('select#fontselector');
-				$.each(fonts, function(key, font) {
-					$fontSelector.append($("<option></option>").attr("value", font).text(font));
-				});
-				$fontSelector.append($("<option></option>").text('Reset'));
-				$fontSelector.on('change', function() {
-					var font = $fontSelector.find('option:selected').val();
-					if (font === 'Reset') {
-						$webfonts.reset();
-					} else {
-						$webfonts.apply(font);
-					}
-				});
-			})
-		</script>
-	</head>
+				},
+				languages: {
+					en: [ 'Sans', 'Rufscript', 'UnifrakturMaguntia' ]
+				}
+			},
+			exclude: '.webfonts-exclude'
+		} )
+		// get an instance of WebFonts
+		var $webfonts = $( 'div#container' ).data( 'webfonts' );
+		// Get a list of all fonts provided by WebFonts
+		var fonts = $webfonts.list();
+		// Also test system fonts.
+		$.merge( fonts, [ 'Courier', 'Sans', 'Serif', 'Monospace' ] );
+		var $fontSelector = $( 'select#fontselector' );
+		$.each( fonts, function( key, font ) {
+			$fontSelector.append( $( "<option></option>" ).attr( "value", font ).text( font ) );
+		} );
+		$fontSelector.append( $( "<option></option>" ).text( 'Reset' ) );
+		$fontSelector.on( 'change', function() {
+			var font = $fontSelector.find( 'option:selected' ).val();
+			if ( font === 'Reset' ) {
+				$webfonts.reset();
+			} else {
+				$webfonts.apply( font );
+			}
+		} );
+	} )
+</script>
+</head>
 
-	<body>
-		<div>
-			<header>
-				<h1>jQuery WebFonts example</h1>
-			</header>
-			<div class='fontselector'>
-				Select Font : <select  id ="fontselector" ></select>
-			</div>
-			<div id='container'>
-				<p>
-					Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-				</p>
-				<textarea>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-				</textarea>
-				<input type="text" placeholder="Enter text here" />
-
-				<!-- We can define a webfont as font-family for an element using inline style. -->
-				<p style="font-family: Rufscript">
-					This is always shown in Rufscript font.
-				</p>
-
-				<!-- We can define a webfont as font-family for an element in external css
-				See style.css and definition of p.Unifraktur -->
-				<p class="Unifraktur">
-					This is always shown in UnifrakturMaguntia font.
-				</p>
-			</div>
-
-			<footer>
-				<p>
-					&copy; Copyright  by Santhosh Thottingal
-				</p>
-				<p>
-					Visit <a href="https://github.com/santhoshtr/jquery.webfonts">jquery.webfonts</a> project
-				</p>
-			</footer>
+<body>
+	<div>
+		<header>
+			<h1>jQuery WebFonts example</h1>
+		</header>
+		<div class='fontselector'>
+			Select Font : <select id="fontselector"></select>
 		</div>
-	</body>
+		<div id='container'>
+			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt
+				ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco
+				laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+				voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat
+				non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<textarea>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+				</textarea>
+			<input type="text" placeholder="Enter text here" />
+
+			<!-- We can define a webfont as font-family for an element using inline style. -->
+			<p style="font-family: Rufscript">This is always shown in Rufscript font.</p>
+
+			<!-- We can define a webfont as font-family for an element in external css
+				See style.css and definition of p.Unifraktur -->
+			<p class="Unifraktur">This is always shown in UnifrakturMaguntia font.</p>
+			<textarea class='webfonts-exclude' placeholder="This text is always monospace and excluded from webfonts"></textarea>
+		</div>
+
+		<footer>
+			<p>&copy; Copyright by Santhosh Thottingal</p>
+			<p>
+				Visit <a href="https://github.com/santhoshtr/jquery.webfonts">jquery.webfonts</a> project
+			</p>
+		</footer>
+	</div>
+</body>
 </html>

@@ -1,4 +1,4 @@
-/* global pluralRuleParser, QUnit, jQuery */
+/* global QUnit, jQuery */
 ( function( $ ) {
 	"use strict";
 

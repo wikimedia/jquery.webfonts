@@ -92,7 +92,8 @@
 				fontStack.unshift( fontFamily );
 			}
 			$element.css( 'font-family', fontStack.join() );
-			$element.find( 'textarea, input' ).css( 'font-family', fontStack.join() );
+			$element.find( 'textarea, input' ).not( this.options.exclude ).css( 'font-family',
+					fontStack.join() );
 		},
 
 		/**
@@ -285,8 +286,8 @@
 
 	$.fn.webfonts.defaults = {
 		repository: WebFonts.repository, // Default font repository
-		fontStack: [ 'Helvetica', 'Arial', 'sans-serif' ]
-	// Default font fall back series
+		fontStack: [ 'Helvetica', 'Arial', 'sans-serif' ], // Default font fallback
+		exclude: '' // jQuery selectors to exclude
 	};
 
 	$.fn.webfonts.Constructor = WebFonts;
