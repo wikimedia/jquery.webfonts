@@ -1,14 +1,14 @@
 /**
  * jQuery Webfonts.
- * 
+ *
  * Copyright (C) 2012 Santhosh Thottingal
- * 
+ *
  * UniversalLanguageSelector is dual licensed GPLv2 or later and MIT. You don't
  * have to do anything special to choose one license or the other and you don't
  * have to notify anyone which license you are using. You are free to use
  * UniversalLanguageSelector in commercial projects as long as the copyright
  * header is left intact. See files GPL-LICENSE and MIT-LICENSE for details.
- * 
+ *
  * @file
  * @ingroup Extensions
  * @licence GNU General Public Licence 2.0 or later
@@ -78,7 +78,7 @@
 
 		/**
 		 * Apply a font for the element.
-		 * 
+		 *
 		 * @param fontFamily String: font family name
 		 */
 		apply: function( fontFamily, $element ) {
@@ -98,7 +98,7 @@
 
 		/**
 		 * Load a given fontFamily if not loaded already
-		 * 
+		 *
 		 * @param fontFamily String font family name
 		 */
 		load: function( fontFamily ) {
@@ -148,34 +148,38 @@
 
 		/**
 		 * List all fonts for the given language
-		 * 
+		 *
 		 * @param language mixed: [optional] language code. If undefined all
 		 *            fonts will be listed
 		 * @return Array font names array
 		 */
 		list: function( language ) {
-			var fontName = null, fontNames = [];
+			var fontName,
+				fontNames = [];
 
 			if ( language ) {
-				fontNames = this.repository.languages[language];
+				fontNames = this.repository.languages[language] || [];
 			} else {
-				for (fontName in this.repository.fonts) {
+				for ( fontName in this.repository.fonts ) {
 					if ( this.repository.fonts.hasOwnProperty( fontName ) ) {
 						fontNames.push( fontName );
 					}
 				}
 			}
+
 			return fontNames;
 		},
 
 		/**
 		 * List all languages supported by the repository
-		 * 
+		 *
 		 * @return Array language codes
 		 */
 		languages: function() {
-			var language = null, languages = [];
-			for (language in this.repository.languages) {
+			var language,
+				languages = [];
+
+			for ( language in this.repository.languages ) {
 				if ( this.repository.languages.hasOwnProperty( language ) ) {
 					languages.push( language );
 				}
@@ -185,7 +189,7 @@
 
 		/**
 		 * Set the font repository
-		 * 
+		 *
 		 * @param {Object} repository The font repository.
 		 */
 		setRepository: function( repository ) {
@@ -209,7 +213,7 @@
 		/**
 		 * Construct the CSS required for the font-family, inject it to the head
 		 * of the body so that it gets loaded.
-		 * 
+		 *
 		 * @param fontFamily The font-family name
 		 * @param variant The font variant, eg: bold, italic etc. Default is
 		 *            normal.
@@ -297,7 +301,7 @@
 
 	/**
 	 * Create a new style tag and add it to the DOM.
-	 * 
+	 *
 	 * @param text String: CSS text
 	 * @return HTMLStyleElement
 	 */
