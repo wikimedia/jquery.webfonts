@@ -82,8 +82,10 @@
 		 * @param fontFamily String: font family name
 		 */
 		apply: function( fontFamily, $element ) {
-			$element = $element || this.$element;
 			var fontStack = this.options.fontStack.slice( 0 );
+
+			$element = $element || this.$element;
+
 			// Loading an empty string is pointless.
 			// Putting an empty string into a font-family list doesn't work with
 			// jQuery.css().
@@ -91,9 +93,16 @@
 				this.load( fontFamily );
 				fontStack.unshift( fontFamily );
 			}
-			$element.css( 'font-family', fontStack.join() );
-			$element.find( 'textarea, input' ).not( this.options.exclude ).css( 'font-family',
-					fontStack.join() );
+
+			// Set the font of this element if it's not excluded
+			if ( !$element.is( this.options.exclude ) ) {
+				$element.css( 'font-family', fontStack.join() );
+			}
+
+			// Set the font of this element's children if they are not excluded
+			$element.find( 'textarea, input' )
+				.not( this.options.exclude )
+				.css( 'font-family', fontStack.join() );
 		},
 
 		/**
@@ -121,27 +130,33 @@
 		 * different language than element
 		 */
 		parse: function() {
-			var that = this;
-			that.$element.find( '*[lang], [style], [class]' ).each( function( i, element ) {
-				var fontFamilyStyle, fontFamily, $element = $( element );
+			var webfonts = this;
+
+			webfonts.$element.find( '*[lang], [style], [class]' ).each( function( i, element ) {
+				var fontFamilyStyle, fontFamily,
+					$element = $( element );
 
 				fontFamilyStyle = $element.css( 'fontFamily' );
+
 				if ( fontFamilyStyle ) {
 					fontFamily = fontFamilyStyle.split( ',' )[0];
+
 					// Remove the ' and " characters if any.
 					fontFamily = $.trim( fontFamily.replace( /["']/g, '' ) );
-					if ( that.load( fontFamily ) ) {
-						// Font family overrides lang attribute
-						// But was it the fontfamily allocated for the current
+
+					if ( webfonts.load( fontFamily ) ) {
+						// Font family overrides the lang attribute,
+						// but was it the fontfamily allocated for the current
 						// language?
-						if ( fontFamily === that.getFont( element.lang ) ) {
+						if ( fontFamily === webfonts.getFont( element.lang ) ) {
 							return true;
 						}
 					}
 				}
-				if ( element.lang && element.lang !== that.$element.attr( 'lang' ) ) {
-					fontFamily = that.getFont( element.lang );
-					that.apply( fontFamily, $( element ) );
+
+				if ( element.lang && element.lang !== webfonts.$element.attr( 'lang' ) ) {
+					fontFamily = webfonts.getFont( element.lang );
+					webfonts.apply( fontFamily, $( element ) );
 				}
 			} );
 		},
