@@ -234,14 +234,14 @@
 		 *            normal.
 		 */
 		getCSS: function( fontFamily, variant ) {
-			var fontconfig, base, version, versionSuffix, styleString, userAgent, fontStyle, fontFormats;
+			var webfonts, fontconfig, base, version, versionSuffix, styleString, userAgent, fontStyle, fontFormats;
 
+			webfonts = this;
 			variant = variant || 'normal';
 			fontconfig = this.repository.get( fontFamily );
 			if ( variant !== 'normal' ) {
 				if ( fontconfig.variants !== undefined && fontconfig.variants[variant] ) {
-					fontFamily = fontconfig.variants[variant];
-					fontconfig = this.repository.get( fontFamily );
+					fontconfig = this.repository.get( fontconfig.variants[variant] );
 				}
 			}
 			if ( !fontconfig ) {
@@ -283,7 +283,24 @@
 				styleString += "\tfont-weight:" + fontconfig.fontweight + ";";
 			}
 			styleString += "\tfont-style:" + fontStyle + ";";
+
+			if ( fontconfig.fontweight !== undefined ) {
+				styleString += "\tfont-weight:" + fontconfig.fontweight + ";";
+			}
+			if ( fontconfig.fontstyle !== undefined ) {
+				styleString += "\tfont-style:" + fontconfig.fontstyle + ";";
+			} else {
+				styleString += "\tfont-style: normal;";
+			}
+
 			styleString += "}";
+
+			if ( fontconfig.variants !== undefined ) {
+				$.each( fontconfig.variants, function ( variant, variantFontFamily ) {
+					styleString += webfonts.getCSS( fontFamily, variant );
+				} );
+			}
+
 			return styleString;
 		}
 	};
