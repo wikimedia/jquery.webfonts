@@ -34,7 +34,6 @@
 			if ( defaultFonts !== "" ) {
 				expectedResetFontFamilyList =
 					fontFamilyList( defaultFonts ).concat( expectedResetFontFamilyList );
-				console.log( expectedResetFontFamilyList );
 			}
 
 			$webfontsElement.webfonts( {
