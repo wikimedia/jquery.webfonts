@@ -20,18 +20,19 @@
 	test(
 		"Webfonts loading and application test",
 		function( assert ) {
-			var localFont = "Garamond", fallbackFonts = "Helvetica, Arial, sans-serif";
-			var expectedResetFontFamilyList = fontFamilyList( fallbackFonts );
-			var $qunitFixture = $( "<body>" );
-			var $webfontsElement = $( "<div id='webfonts-fixture'>" );
-			var defaultFonts = $webfontsElement.css( "font-family" );
+			var localFont = "Garamond",
+				fallbackFonts = "Helvetica, Arial, sans-serif",
+				expectedResetFontFamilyList = fontFamilyList( fallbackFonts ),
+				$qunitFixture = $( "<body>" ),
+				$webfontsElement = $( "<div id='webfonts-fixture'>" ),
+				defaultFonts = $webfontsElement.css( "font-family" );
 
-			// Different fonts are the default in different browsers.
+			// Different browsers have different default fonts.
 			// Firefox assigns the default fonts from the preferences and
 			// Chrome doesn't assign anything.
 			if ( defaultFonts !== "" ) {
-				expectedResetFontFamilyList = fontFamilyList( defaultFonts ).concat(
-						expectedResetFontFamilyList );
+				expectedResetFontFamilyList =
+					fontFamilyList( defaultFonts ).concat( expectedResetFontFamilyList );
 			}
 
 			// Initialize document to language "my" to make webfonts work
@@ -52,13 +53,13 @@
 				}
 			} ).appendTo( $qunitFixture );
 
-			var webfonts = $webfontsElement.data( "webfonts" );
-			var fontName = webfonts.fonts[0];
-			var expectedFontFamilyValue = "'" + fontName + "', " + fallbackFonts;
-			var expectedFontFamilyList = fontFamilyList( expectedFontFamilyValue );
-			var $spanElement = $( "<span>span content</span>" ).css( "font-family", localFont );
-			var $inputElement = $( "<input value='input content' />" );
-			var $textareaElement = $( "<textarea>textarea content</textarea>" );
+			var webfonts = $webfontsElement.data( "webfonts" ),
+				fontName = webfonts.fonts[0],
+				expectedFontFamilyValue = "'" + fontName + "', " + fallbackFonts,
+				expectedFontFamilyList = fontFamilyList( expectedFontFamilyValue ),
+				$spanElement = $( "<span>span content</span>" ).css( "font-family", localFont ),
+				$inputElement = $( "<input value='input content' />" ),
+				$textareaElement = $( "<textarea>textarea content</textarea>" );
 
 			$webfontsElement.append( $spanElement, $inputElement, $textareaElement );
 
