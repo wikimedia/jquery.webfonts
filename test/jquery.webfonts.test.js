@@ -68,31 +68,30 @@
 			// Font application
 			webfonts.apply( fontName );
 			assert.deepEqual( fontFamilyList( $webfontsElement.css( "font-family" ) ),
-					expectedFontFamilyList,
-					"The web font was applied to font-family of the test <div>" );
+				expectedFontFamilyList,
+				"The web font was applied to font-family of the test <div>" );
 			assert.deepEqual( fontFamilyList( $spanElement.css( "font-family" ) ),
-					[ localFont ],
-					"A web font was not applied to an element with explicit font-family" );
+				[ localFont ],
+				"A web font was not applied to an element with explicit font-family" );
 			assert.deepEqual( fontFamilyList( $inputElement.css( "font-family" ) ),
-					expectedFontFamilyList,
-					"The web font was applied to font-family of the test <input>" );
+				expectedFontFamilyList,
+				"The web font was applied to font-family of the test <input>" );
 			assert.deepEqual( fontFamilyList( $textareaElement.css( "font-family" ) ),
-					expectedFontFamilyList,
-					"The web font was applied to font-family of the test <textarea>" );
+				expectedFontFamilyList,
+				"The web font was applied to font-family of the test <textarea>" );
 
 			// Font resetting
 			webfonts.reset();
 			assert.deepEqual( fontFamilyList( $webfontsElement.css( "font-family" ) ),
-					expectedResetFontFamilyList, "The web font on the test <div> was reset" );
-			assert
-					.deepEqual( fontFamilyList( $spanElement.css( "font-family" ) ),
-							[ localFont ],
-							"An element with an explicit font-family remained with it after webfonts resetting" );
+				expectedResetFontFamilyList, "The web font on the test <div> was reset" );
+			assert.deepEqual( fontFamilyList( $spanElement.css( "font-family" ) ),
+				[ localFont ],
+				"An element with an explicit font-family remained with it after webfonts resetting" );
 			assert.deepEqual( fontFamilyList( $inputElement.css( "font-family" ) ),
-					expectedResetFontFamilyList, "The web font on the test <input> was reset" );
+				expectedResetFontFamilyList, "The web font on the test <input> was reset" );
 			assert.deepEqual( fontFamilyList( $textareaElement.css( "font-family" ) ),
-					expectedResetFontFamilyList,
-					"The web font on the test <textarea> was reset" );
+				expectedResetFontFamilyList,
+				"The web font on the test <textarea> was reset" );
 
 			$webfontsElement.remove();
 		}
