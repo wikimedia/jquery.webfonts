@@ -6,8 +6,8 @@
 	// because browsers change the string by adding or removing spaces,
 	// so the string cannot be compared in a uniform way.
 	function fontFamilyList( fontFamilyString ) {
-		var fontIndex, fontList = fontFamilyString.split( /, */ ); // Create a
-		// list
+		var fontIndex,
+			fontList = fontFamilyString.split( /, */ ); // Create a list
 
 		// Remove the quotes from font names
 		for (fontIndex = 0; fontIndex < fontList.length; ++fontIndex) {
@@ -24,7 +24,8 @@
 				fallbackFonts = "Helvetica, Arial, sans-serif",
 				expectedResetFontFamilyList = fontFamilyList( fallbackFonts ),
 				$qunitFixture = $( "<body>" ),
-				$webfontsElement = $( "<div id='webfonts-fixture'>" ),
+				// Assign lang to 'my' to make webfonts work
+				$webfontsElement = $( "<div id='webfonts-fixture' lang='my'>" ),
 				defaultFonts = $webfontsElement.css( "font-family" );
 
 			// Different browsers have different default fonts.
@@ -35,8 +36,7 @@
 					fontFamilyList( defaultFonts ).concat( expectedResetFontFamilyList );
 			}
 
-			// Initialize document to language "my" to make webfonts work
-			$webfontsElement.attr( "lang", "my" ).webfonts( {
+			$webfontsElement.webfonts( {
 				repository: {
 					fonts: {
 						TharLon: {
