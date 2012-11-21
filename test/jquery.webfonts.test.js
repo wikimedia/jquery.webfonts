@@ -59,9 +59,15 @@
 				expectedFontFamilyList = fontFamilyList( expectedFontFamilyValue ),
 				$spanElement = $( "<span>span content</span>" ).css( "font-family", localFont ),
 				$inputElement = $( "<input value='input content' />" ),
-				$textareaElement = $( "<textarea>textarea content</textarea>" );
+				$textareaElement = $( "<textarea>textarea content</textarea>" ),
+				$buttonElement = $( "<button>button label</button>" );
 
-			$webfontsElement.append( $spanElement, $inputElement, $textareaElement );
+			$webfontsElement.append(
+				$spanElement,
+				$inputElement,
+				$textareaElement,
+				$buttonElement
+			);
 
 			assert.strictEqual( fontName, "TharLon", "Correct font name loaded" );
 
@@ -79,6 +85,9 @@
 			assert.deepEqual( fontFamilyList( $textareaElement.css( "font-family" ) ),
 				expectedFontFamilyList,
 				"The web font was applied to font-family of the test <textarea>" );
+			assert.deepEqual( fontFamilyList( $buttonElement.css( "font-family" ) ),
+				expectedFontFamilyList,
+				"The web font was applied to font-family of the test <button>" );
 
 			// Font resetting
 			webfonts.reset();
@@ -92,6 +101,9 @@
 			assert.deepEqual( fontFamilyList( $textareaElement.css( "font-family" ) ),
 				expectedResetFontFamilyList,
 				"The web font on the test <textarea> was reset" );
+			assert.deepEqual( fontFamilyList( $buttonElement.css( "font-family" ) ),
+				expectedResetFontFamilyList,
+				"The web font on the test <button> was reset" );
 
 			$webfontsElement.remove();
 		}
