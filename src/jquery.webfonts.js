@@ -99,8 +99,9 @@
 				$element.css( 'font-family', fontStack.join() );
 			}
 
-			// Set the font of this element's children if they are not excluded
-			$element.find( 'textarea, input' )
+			// Set the font of this element's children if they are not excluded.
+			// font-family of <input>, <textarea> and <button> must be changed explicitly.
+			$element.find( 'textarea, input, button' )
 				.not( this.options.exclude )
 				.css( 'font-family', fontStack.join() );
 		},
