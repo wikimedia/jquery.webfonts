@@ -80,6 +80,7 @@
 		 * Apply a font for the element.
 		 *
 		 * @param fontFamily String: font family name
+		 * @param $element
 		 */
 		apply: function( fontFamily, $element ) {
 			var fontStack = this.options.fontStack.slice( 0 );
@@ -115,7 +116,7 @@
 			if ( $.inArray( fontFamily, this.fonts ) >= 0 ) {
 				return true;
 			}
-			var styleString = this.getCSS( fontFamily );
+			var styleString = this.getCSS( fontFamily, 'normal' );
 			if ( styleString ) {
 				injectCSS( styleString );
 			} else {
@@ -335,7 +336,7 @@
 	/**
 	 * Create a new style tag and add it to the DOM.
 	 *
-	 * @param text String: CSS text
+	 * @param css String: CSS text
 	 * @return HTMLStyleElement
 	 */
 	function injectCSS( css ) {
