@@ -16,7 +16,7 @@
  */
 
 ( function( $, window, document, undefined ) {
-	"use strict";
+	'use strict';
 
 	var WebFonts = function( element, options ) {
 		// Load defaults
@@ -252,50 +252,50 @@
 
 			base = this.repository.base;
 			version = fontconfig.version;
-			versionSuffix = "?version=" + version + '&20120101';
-			styleString = "@font-face { font-family: '" + fontFamily + "';\n";
+			versionSuffix = '?version=' + version + '&20120101';
+			styleString = '@font-face { font-family: \'' + fontFamily + '\';\\n';
 			userAgent = window.navigator.userAgent;
 			fontStyle = fontconfig.fontstyle || 'normal';
 			fontFormats = [];
 
 			if ( fontconfig.eot ) {
-				styleString += "\tsrc: url('" + base + fontconfig.eot + versionSuffix + "');\n";
+				styleString += '\\tsrc: url(\'' + base + fontconfig.eot + versionSuffix + '\');\\n';
 			}
-			styleString += "\tsrc: ";
+			styleString += '\\tsrc: ';
 			// If the font is present locally, use it.
 			if ( userAgent.match( /Android 2\.3/ ) === null ) {
 				// Android 2.3.x does not respect local() syntax.
 				// http://code.google.com/p/android/issues/detail?id=10609
-				styleString += "local('" + fontFamily + "'),";
+				styleString += 'local(\'' + fontFamily + '\'),';
 			}
 			if ( fontconfig.woff ) {
-				fontFormats.push( "\t\turl('" + base + fontconfig.woff + versionSuffix
-						+ "') format('woff')" );
+				fontFormats.push( '\\t\\turl(\'' + base + fontconfig.woff + versionSuffix
+						+ '\') format(\'woff\')' );
 			}
 			if ( fontconfig.svg ) {
-				fontFormats.push( "\t\turl('" + base + fontconfig.svg + versionSuffix + "#"
-						+ fontFamily + "') format('svg')" );
+				fontFormats.push( '\\t\\turl(\'' + base + fontconfig.svg + versionSuffix + '#'
+						+ fontFamily + '\') format(\'svg\')' );
 			}
 			if ( fontconfig.ttf ) {
-				fontFormats.push( "\t\turl('" + base + fontconfig.ttf + versionSuffix
-						+ "') format('truetype')" );
+				fontFormats.push( '\\t\\turl(\'' + base + fontconfig.ttf + versionSuffix
+						+ '\') format(\'truetype\')' );
 			}
-			styleString += fontFormats.join() + ";\n";
+			styleString += fontFormats.join() + ';\\n';
 			if ( fontconfig.fontweight ) {
-				styleString += "\tfont-weight:" + fontconfig.fontweight + ";";
+				styleString += '\\tfont-weight:' + fontconfig.fontweight + ';';
 			}
-			styleString += "\tfont-style:" + fontStyle + ";";
+			styleString += '\\tfont-style:' + fontStyle + ';';
 
 			if ( fontconfig.fontweight !== undefined ) {
-				styleString += "\tfont-weight:" + fontconfig.fontweight + ";";
+				styleString += '\font-weight:' + fontconfig.fontweight + ';';
 			}
 			if ( fontconfig.fontstyle !== undefined ) {
-				styleString += "\tfont-style:" + fontconfig.fontstyle + ";";
+				styleString += '\\tfont-style:' + fontconfig.fontstyle + ';';
 			} else {
-				styleString += "\tfont-style: normal;";
+				styleString += '\\tfont-style: normal;';
 			}
 
-			styleString += "}";
+			styleString += '}';
 
 			if ( fontconfig.variants !== undefined ) {
 				$.each( fontconfig.variants, function ( variant, variantFontFamily ) {
