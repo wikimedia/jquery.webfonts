@@ -287,7 +287,7 @@
 			styleString += '\tfont-style:' + fontStyle + ';';
 
 			if ( fontconfig.fontweight !== undefined ) {
-				styleString += '\font-weight:' + fontconfig.fontweight + ';';
+				styleString += '\tfont-weight:' + fontconfig.fontweight + ';';
 			}
 			if ( fontconfig.fontstyle !== undefined ) {
 				styleString += '\tfont-style:' + fontconfig.fontstyle + ';';
