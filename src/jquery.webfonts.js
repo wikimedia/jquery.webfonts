@@ -95,21 +95,17 @@
 				fontStack.unshift( fontFamily );
 			}
 
+			if ( !fontFamily || fontFamily === this.originalFontFamily ) {
+				// We are resetting the font to original font.
+				fontStack = [];
+				// This will cause removing inline fontFamily style.
+			}
+
 			// Set the font of this element if it's not excluded
 			if ( !$element.is( this.options.exclude ) ) {
 				$element.css( 'font-family', fontStack.join() );
 			}
 
-			if ( !fontFamily || fontFamily === this.originalFontFamily ) {
-				// We are resetting the font to original font.
-				// Do not explicitly set fontFamily for child nodes. Just remove
-				// the previous setting.
-				$element.find( 'textarea, input, button' )
-					.not( this.options.exclude )
-					.css( 'font-family', '' );
-
-				return;
-			}
 			// Set the font of this element's children if they are not excluded.
 			// font-family of <input>, <textarea> and <button> must be changed explicitly.
 			$element.find( 'textarea, input, button' )
