@@ -304,7 +304,7 @@
 			styleString += '}';
 
 			if ( fontconfig.variants !== undefined ) {
-				$.each( fontconfig.variants, function ( variant, variantFontFamily ) {
+				$.each( fontconfig.variants, function ( variant ) {
 					styleString += webfonts.getCSS( fontFamily, variant );
 				} );
 			}
