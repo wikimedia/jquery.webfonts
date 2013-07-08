@@ -154,7 +154,7 @@
 
 					if ( webfonts.load( fontFamily ) ) {
 						// Font family overrides the lang attribute,
-						// but was it the fontfamily allocated for the current
+						// but was it the font family allocated for the current
 						// language?
 						if ( fontFamily === webfonts.getFont( element.lang ) ) {
 							return true;

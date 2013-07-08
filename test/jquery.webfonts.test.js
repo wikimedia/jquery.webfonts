@@ -20,7 +20,9 @@
 	test(
 		'Webfonts loading and application test',
 		function( assert ) {
-			var localFont = 'Garamond',
+			var webfonts, fontName, expectedFontFamilyValue, expectedFontFamilyList,
+				$spanElement, $inputElement, $textareaElement, $buttonElement,
+				localFont = 'Garamond',
 				fallbackFonts = 'Helvetica, Arial, sans-serif',
 				expectedResetFontFamilyList = fontFamilyList( fallbackFonts ),
 				$qunitFixture = $( '<body>' ),
@@ -53,14 +55,14 @@
 				}
 			} ).appendTo( $qunitFixture );
 
-			var webfonts = $webfontsElement.data( 'webfonts' ),
-				fontName = webfonts.fonts[0],
-				expectedFontFamilyValue = '\'' + fontName + '\', ' + fallbackFonts,
-				expectedFontFamilyList = fontFamilyList( expectedFontFamilyValue ),
-				$spanElement = $( '<span>span content</span>' ).css( 'font-family', localFont ),
-				$inputElement = $( '<input value=\'input content\' />' ),
-				$textareaElement = $( '<textarea>textarea content</textarea>' ),
-				$buttonElement = $( '<button>button label</button>' );
+			webfonts = $webfontsElement.data( 'webfonts' );
+			fontName = webfonts.fonts[0];
+			expectedFontFamilyValue = '\'' + fontName + '\', ' + fallbackFonts;
+			expectedFontFamilyList = fontFamilyList( expectedFontFamilyValue );
+			$spanElement = $( '<span>span content</span>' ).css( 'font-family', localFont );
+			$inputElement = $( '<input value=\'input content\' />' );
+			$textareaElement = $( '<textarea>textarea content</textarea>' );
+			$buttonElement = $( '<button>button label</button>' );
 
 			$webfontsElement.append(
 				$spanElement,
