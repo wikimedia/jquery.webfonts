@@ -1,4 +1,4 @@
-/* global QUnit, jQuery */
+/* global test */
 ( function( $ ) {
 	'use strict';
 
@@ -24,19 +24,9 @@
 				$spanElement, $inputElement, $textareaElement, $buttonElement,
 				localFont = 'Garamond',
 				fallbackFonts = 'Helvetica, Arial, sans-serif',
-				expectedResetFontFamilyList = fontFamilyList( fallbackFonts ),
 				$qunitFixture = $( '<body>' ),
 				// Assign lang to 'my' to make webfonts work
-				$webfontsElement = $( '<div id=\'webfonts-fixture\' lang=\'my\'>' ),
-				defaultFonts = $webfontsElement.css( 'font-family' );
-
-			// Different browsers have different default fonts.
-			// Firefox assigns the default fonts from the preferences and
-			// Chrome doesn't assign anything.
-			if ( defaultFonts !== '' ) {
-				expectedResetFontFamilyList =
-					fontFamilyList( defaultFonts ).concat( expectedResetFontFamilyList );
-			}
+				$webfontsElement = $( '<div id=\'webfonts-fixture\' lang=\'my\'>' );
 
 			$webfontsElement.webfonts( {
 				repository: {
