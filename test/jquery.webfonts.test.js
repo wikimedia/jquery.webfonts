@@ -93,18 +93,16 @@
 
 			// Font resetting
 			webfonts.reset();
-			assert.deepEqual( fontFamilyList( $webfontsElement.css( 'font-family' ) ),
-				expectedResetFontFamilyList, 'The web font on the test <div> was reset' );
+			assert.strictEqual( $webfontsElement.css( 'font-family' ), '',
+				'The web font on the test <div> was reset' );
 			assert.deepEqual( fontFamilyList( $spanElement.css( 'font-family' ) ),
 				[ localFont ],
 				'An element with an explicit font-family remained with it after webfonts resetting' );
-			assert.deepEqual( fontFamilyList( $inputElement.css( 'font-family' ) ),
-				expectedResetFontFamilyList, 'The web font on the test <input> was reset' );
-			assert.deepEqual( fontFamilyList( $textareaElement.css( 'font-family' ) ),
-				expectedResetFontFamilyList,
+			assert.strictEqual( $inputElement.css( 'font-family' ), '',
+				'The web font on the test <input> was reset' );
+			assert.deepEqual( $textareaElement.css( 'font-family' ), '',
 				'The web font on the test <textarea> was reset' );
-			assert.deepEqual( fontFamilyList( $buttonElement.css( 'font-family' ) ),
-				expectedResetFontFamilyList,
+			assert.deepEqual( $buttonElement.css( 'font-family' ), '',
 				'The web font on the test <button> was reset' );
 
 			$webfontsElement.remove();
