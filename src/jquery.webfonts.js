@@ -26,6 +26,7 @@
 		this.fonts = [];
 		this.originalFontFamily = this.$element.css( 'font-family' );
 		this.language = this.$element.attr( 'lang' ) || $( 'html' ).attr( 'lang' );
+
 		this.init();
 	};
 
@@ -37,9 +38,11 @@
 		// Utility methods to work on the repository.
 		defaultFont: function( language ) {
 			var defaultFont = null;
+
 			if ( this.languages[language] ) {
 				defaultFont = this.languages[language][0];
 			}
+
 			return defaultFont;
 		},
 
@@ -63,11 +66,10 @@
 		 * Initialize.
 		 */
 		init: function() {
-			var fontFamily;
 			if ( this.language ) {
-				fontFamily = this.getFont( this.language );
-				this.apply( fontFamily );
+				this.apply( this.getFont( this.language ) );
 			}
+
 			this.parse();
 		},
 
@@ -119,17 +121,23 @@
 		 * @param fontFamily String font family name
 		 */
 		load: function( fontFamily ) {
+			var styleString;
+
 			if ( $.inArray( fontFamily, this.fonts ) >= 0 ) {
 				return true;
 			}
-			var styleString = this.getCSS( fontFamily, 'normal' );
+
+			styleString = this.getCSS( fontFamily, 'normal' );
+
 			if ( styleString ) {
 				injectCSS( styleString );
 			} else {
 				// Font not found
 				return false;
 			}
+
 			this.fonts.push( fontFamily );
+
 			return true;
 		},
 
@@ -138,9 +146,10 @@
 		 * different language than element
 		 */
 		parse: function() {
-			var webfonts = this;
+			var webfonts = this,
+				$elements = webfonts.$element.find( '*[lang], [style], [class]' );
 
-			webfonts.$element.find( '*[lang], [style], [class]' ).each( function( i, element ) {
+			$elements.each( function( i, element ) {
 				var fontFamilyStyle, fontFamily,
 					$element = $( element );
 
@@ -172,8 +181,7 @@
 		/**
 		 * List all fonts for the given language
 		 *
-		 * @param language mixed: [optional] language code. If undefined all
-		 *            fonts will be listed
+		 * @param language mixed: [optional] language code. If undefined all fonts will be listed
 		 * @return Array font names array
 		 */
 		list: function( language ) {
@@ -207,6 +215,7 @@
 					languages.push( language );
 				}
 			}
+
 			return languages;
 		},
 
@@ -227,7 +236,7 @@
 		},
 
 		/**
-		 * unbind the plugin
+		 * Unbind the plugin
 		 */
 		unbind: function() {
 			this.$element.data( 'webfonts', null );
@@ -238,20 +247,21 @@
 		 * of the body so that it gets loaded.
 		 *
 		 * @param fontFamily The font-family name
-		 * @param variant The font variant, eg: bold, italic etc. Default is
-		 *            normal.
+		 * @param variant The font variant, eg: bold, italic etc. Default is normal.
 		 */
 		getCSS: function( fontFamily, variant ) {
-			var webfonts, fontconfig, base, version, versionSuffix, styleString, userAgent, fontStyle, fontFormats;
+			var webfonts, fontconfig, base, version, versionSuffix,
+				styleString, userAgent, fontStyle, fontFormats,
+				fontconfig = this.repository.get( fontFamily );
 
-			webfonts = this;
 			variant = variant || 'normal';
-			fontconfig = this.repository.get( fontFamily );
+
 			if ( variant !== 'normal' ) {
 				if ( fontconfig.variants !== undefined && fontconfig.variants[variant] ) {
 					fontconfig = this.repository.get( fontconfig.variants[variant] );
 				}
 			}
+
 			if ( !fontconfig ) {
 				return false;
 			}
@@ -268,33 +278,41 @@
 				styleString += '\tsrc: url(\'' + base + fontconfig.eot + versionSuffix + '\');\n';
 			}
 			styleString += '\tsrc: ';
+
 			// If the font is present locally, use it.
 			if ( userAgent.match( /Android 2\.3/ ) === null ) {
 				// Android 2.3.x does not respect local() syntax.
 				// http://code.google.com/p/android/issues/detail?id=10609
 				styleString += 'local(\'' + fontFamily + '\'),';
 			}
+
 			if ( fontconfig.woff ) {
 				fontFormats.push( '\t\turl(\'' + base + fontconfig.woff + versionSuffix
 						+ '\') format(\'woff\')' );
 			}
+
 			if ( fontconfig.svg ) {
 				fontFormats.push( '\t\turl(\'' + base + fontconfig.svg + versionSuffix + '#'
 						+ fontFamily + '\') format(\'svg\')' );
 			}
+
 			if ( fontconfig.ttf ) {
 				fontFormats.push( '\t\turl(\'' + base + fontconfig.ttf + versionSuffix
 						+ '\') format(\'truetype\')' );
 			}
+
 			styleString += fontFormats.join() + ';\n';
+
 			if ( fontconfig.fontweight ) {
 				styleString += '\tfont-weight:' + fontconfig.fontweight + ';';
 			}
+
 			styleString += '\tfont-style:' + fontStyle + ';';
 
 			if ( fontconfig.fontweight !== undefined ) {
 				styleString += '\tfont-weight:' + fontconfig.fontweight + ';';
 			}
+
 			if ( fontconfig.fontstyle !== undefined ) {
 				styleString += '\tfont-style:' + fontconfig.fontstyle + ';';
 			} else {
@@ -303,6 +321,7 @@
 
 			styleString += '}';
 
+			webfonts = this;
 			if ( fontconfig.variants !== undefined ) {
 				$.each( fontconfig.variants, function ( variant ) {
 					styleString += webfonts.getCSS( fontFamily, variant );
@@ -315,13 +334,14 @@
 
 	$.fn.webfonts = function( option ) {
 		return this.each( function() {
-			var $this, data, options;
-			$this = $( this );
-			data = $this.data( 'webfonts' );
-			options = typeof option === 'object' && option;
+			var $this = $( this ),
+				data = $this.data( 'webfonts' ),
+				options = typeof option === 'object' && option;
+
 			if ( !data ) {
 				$this.data( 'webfonts', ( data = new WebFonts( this, options ) ) );
 			}
+
 			if ( typeof option === 'string' ) {
 				data[option]();
 			}
@@ -337,7 +357,6 @@
 	$.fn.webfonts.Constructor = WebFonts;
 
 	// Private methods for the WebFonts prototype
-	// =================================
 
 	/**
 	 * Create a new style tag and add it to the DOM.
@@ -347,10 +366,12 @@
 	 */
 	function injectCSS( css ) {
 		var s = document.createElement( 'style' );
+
 		s.type = 'text/css';
 		s.rel = 'stylesheet';
 		// Insert into document before setting cssText
 		document.getElementsByTagName( 'head' )[0].appendChild( s );
+
 		if ( s.styleSheet ) {
 			s.styleSheet.cssText = css;
 			// IE
@@ -358,7 +379,7 @@
 			// Safari sometimes borks on null
 			s.appendChild( document.createTextNode( String( css ) ) );
 		}
+
 		return s;
 	}
-
 } )( jQuery, window, document );
