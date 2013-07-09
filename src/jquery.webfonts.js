@@ -121,16 +121,16 @@
 		 * @param fontFamily String font family name
 		 */
 		load: function( fontFamily ) {
-			var styleString;
+			var fontFaceRule;
 
 			if ( $.inArray( fontFamily, this.fonts ) >= 0 ) {
 				return true;
 			}
 
-			styleString = this.getCSS( fontFamily, 'normal' );
+			fontFaceRule = this.getCSS( fontFamily, 'normal' );
 
-			if ( styleString ) {
-				injectCSS( styleString );
+			if ( fontFaceRule ) {
+				injectCSS( fontFaceRule );
 			} else {
 				// Font not found
 				return false;
@@ -250,8 +250,8 @@
 		 * @param variant The font variant, eg: bold, italic etc. Default is normal.
 		 */
 		getCSS: function( fontFamily, variant ) {
-			var webfonts, fontconfig, base, version, versionSuffix,
-				styleString, userAgent, fontStyle, fontFormats,
+			var webfonts, base, version, versionSuffix,
+				fontFaceRule, userAgent, fontStyle, fontFormats,
 				fontconfig = this.repository.get( fontFamily );
 
 			variant = variant || 'normal';
@@ -269,21 +269,21 @@
 			base = this.repository.base;
 			version = fontconfig.version;
 			versionSuffix = '?version=' + version + '&20120101';
-			styleString = '@font-face { font-family: \'' + fontFamily + '\';\n';
+			fontFaceRule = '@font-face { font-family: \'' + fontFamily + '\';\n';
 			userAgent = window.navigator.userAgent;
 			fontStyle = fontconfig.fontstyle || 'normal';
 			fontFormats = [];
 
 			if ( fontconfig.eot ) {
-				styleString += '\tsrc: url(\'' + base + fontconfig.eot + versionSuffix + '\');\n';
+				fontFaceRule += '\tsrc: url(\'' + base + fontconfig.eot + versionSuffix + '\');\n';
 			}
-			styleString += '\tsrc: ';
+			fontFaceRule += '\tsrc: ';
 
 			// If the font is present locally, use it.
 			if ( userAgent.match( /Android 2\.3/ ) === null ) {
 				// Android 2.3.x does not respect local() syntax.
 				// http://code.google.com/p/android/issues/detail?id=10609
-				styleString += 'local(\'' + fontFamily + '\'),';
+				fontFaceRule += 'local(\'' + fontFamily + '\'),';
 			}
 
 			if ( fontconfig.woff ) {
@@ -301,34 +301,34 @@
 						+ '\') format(\'truetype\')' );
 			}
 
-			styleString += fontFormats.join() + ';\n';
+			fontFaceRule += fontFormats.join() + ';\n';
 
 			if ( fontconfig.fontweight ) {
-				styleString += '\tfont-weight:' + fontconfig.fontweight + ';';
+				fontFaceRule += '\tfont-weight:' + fontconfig.fontweight + ';';
 			}
 
-			styleString += '\tfont-style:' + fontStyle + ';';
+			fontFaceRule += '\tfont-style:' + fontStyle + ';';
 
 			if ( fontconfig.fontweight !== undefined ) {
-				styleString += '\tfont-weight:' + fontconfig.fontweight + ';';
+				fontFaceRule += '\tfont-weight:' + fontconfig.fontweight + ';';
 			}
 
 			if ( fontconfig.fontstyle !== undefined ) {
-				styleString += '\tfont-style:' + fontconfig.fontstyle + ';';
+				fontFaceRule += '\tfont-style:' + fontconfig.fontstyle + ';';
 			} else {
-				styleString += '\tfont-style: normal;';
+				fontFaceRule += '\tfont-style: normal;';
 			}
 
-			styleString += '}';
+			fontFaceRule += '}';
 
 			webfonts = this;
 			if ( fontconfig.variants !== undefined ) {
 				$.each( fontconfig.variants, function ( variant ) {
-					styleString += webfonts.getCSS( fontFamily, variant );
+					fontFaceRule += webfonts.getCSS( fontFamily, variant );
 				} );
 			}
 
-			return styleString;
+			return fontFaceRule;
 		}
 	};
 
@@ -365,21 +365,19 @@
 	 * @return HTMLStyleElement
 	 */
 	function injectCSS( css ) {
-		var s = document.createElement( 'style' );
+		var webFontsStyleTitle = 'jquery-webfonts-style',
+			$head = $( 'head' ),
+			$style = $head.find( 'style[title="' + webFontsStyleTitle + '"]' );
 
-		s.type = 'text/css';
-		s.rel = 'stylesheet';
-		// Insert into document before setting cssText
-		document.getElementsByTagName( 'head' )[0].appendChild( s );
-
-		if ( s.styleSheet ) {
-			s.styleSheet.cssText = css;
-			// IE
-		} else {
-			// Safari sometimes borks on null
-			s.appendChild( document.createTextNode( String( css ) ) );
+		if ( !$style.length ) {
+			$style = $( '<style>' )
+				.prop( {
+					'type': 'text/css',
+					'title': webFontsStyleTitle
+				} )
+				.appendTo( $head );
 		}
 
-		return s;
+		$style.append( css );
 	}
 } )( jQuery, window, document );
