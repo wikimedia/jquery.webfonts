@@ -121,7 +121,8 @@
 		 * @param {Array|String} fontFamilies List of font families
 		 */
 		load: function( fontFamilies ) {
-			var css, fontFamily, fontFaceRule = '', i;
+			var css, fontFamily, i,
+				fontFaceRule = '';
 
 			// Convert to array if string given (old signature)
 			if ( typeof fontFamilies === 'string' ) {
@@ -151,7 +152,8 @@
 		 * different language than what the element itself has.
 		 */
 		parse: function() {
-			var webfonts = this,
+			var append,
+				webfonts = this,
 				// Fonts can be added indirectly via classes, but also with
 				// style attributes. For lang attributes we will use our font
 				// if they don't have explicit font already.
@@ -160,8 +162,7 @@
 				fontQueue = [],
 				// List of elements to apply a certain font family in a batch.
 				// Object keys are the font family, values are list of plain elements.
-				elementQueue = {},
-				append;
+				elementQueue = {};
 
 			// Append function that keeps the array as a set (no dupes)
 			append = function( array, value ) {
@@ -389,19 +390,22 @@
 	 * @return HTMLStyleElement
 	 */
 	function injectCSS( css ) {
-		var webFontsStyleTitle = 'jquery-webfonts-style',
-			$head = $( 'head' ),
-			$style = $head.find( 'style[title="' + webFontsStyleTitle + '"]' );
+		var s = document.createElement( 'style' );
 
-		if ( !$style.length ) {
-			$style = $( '<style>' )
-				.prop( {
-					type: 'text/css',
-					title: webFontsStyleTitle
-				} )
-				.appendTo( $head );
+		s.type = 'text/css';
+		s.rel = 'stylesheet';
+
+		// Insert into document before setting cssText
+		document.getElementsByTagName( 'head' )[0].appendChild( s );
+
+		if ( s.styleSheet ) {
+			s.styleSheet.cssText = css;
+			// IE
+		} else {
+			// Safari sometimes borks on null
+			s.appendChild( document.createTextNode( String( css ) ) );
 		}
-
-		$style.append( css );
+		
+		return s;
 	}
 } )( jQuery, window, document );
