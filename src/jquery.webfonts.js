@@ -23,6 +23,7 @@
 		this.options = $.extend( {}, $.fn.webfonts.defaults, options );
 		this.$element = $( element );
 		this.repository = $.extend( WebFonts.repository, this.options.repository );
+		// List of loaded fonts
 		this.fonts = [];
 		this.originalFontFamily = this.$element.css( 'font-family' );
 		this.language = this.$element.attr( 'lang' ) || $( 'html' ).attr( 'lang' );
@@ -104,9 +105,7 @@
 			}
 
 			// Set the font of this element if it's not excluded
-			if ( !$element.is( this.options.exclude ) ) {
-				$element.css( 'font-family', fontStack.join() );
-			}
+			$element.not( this.options.exclude ).css( 'font-family', fontStack.join() );
 
 			// Set the font of this element's children if they are not excluded.
 			// font-family of <input>, <textarea> and <button> must be changed explicitly.
@@ -116,38 +115,60 @@
 		},
 
 		/**
-		 * Load a given fontFamily if not loaded already
+		 * Load given font families if not loaded already. Creates the CSS rules
+		 * and appends them to document.
 		 *
-		 * @param fontFamily String font family name
+		 * @param {Array|String} fontFamilies List of font families
 		 */
-		load: function( fontFamily ) {
-			var fontFaceRule;
+		load: function( fontFamilies ) {
+			var css, fontFamily, fontFaceRule = '', i;
 
-			if ( $.inArray( fontFamily, this.fonts ) >= 0 ) {
-				return true;
+			// Convert to array if string given (old signature)
+			if ( typeof fontFamilies === 'string' ) {
+				fontFamilies = [fontFamilies];
 			}
 
-			fontFaceRule = this.getCSS( fontFamily, 'normal' );
+			for ( i = 0; i < fontFamilies.length; i++ ) {
+				fontFamily = fontFamilies[i];
+				if ( $.inArray( fontFamily, this.fonts ) >= 0 ) {
+					continue;
+				}
 
-			if ( fontFaceRule ) {
-				injectCSS( fontFaceRule );
-			} else {
-				// Font not found
-				return false;
+				css = this.getCSS( fontFamily, 'normal' );
+				if ( css !== false ) {
+					fontFaceRule += css;
+					this.fonts.push( fontFamily );
+				}
 			}
 
-			this.fonts.push( fontFamily );
+			injectCSS( fontFaceRule );
 
 			return true;
 		},
 
 		/**
 		 * Parse the element for custom font-family styles and for nodes with
-		 * different language than element
+		 * different language than what the element itself has.
 		 */
 		parse: function() {
 			var webfonts = this,
-				$elements = webfonts.$element.find( '*[lang], [style], [class]' );
+				// Fonts can be added indirectly via classes, but also with
+				// style attributes. For lang attributes we will use our font
+				// if they don't have explicit font already.
+				$elements = webfonts.$element.find( '*[lang], [style], [class]' ),
+				// List of fonts to load in a batch
+				fontQueue = [],
+				// List of elements to apply a certain font family in a batch.
+				// Object keys are the font family, values are list of plain elements.
+				elementQueue = {},
+				append;
+
+			// Append function that keeps the array as a set (no dupes)
+			append = function( array, value ) {
+				if ( $.inArray( value, array ) < 0 ) {
+					array.push( value );
+				}
+			};
 
 			$elements.each( function( i, element ) {
 				var fontFamilyStyle, fontFamily,
@@ -161,20 +182,23 @@
 					// Remove the ' and " characters if any.
 					fontFamily = $.trim( fontFamily.replace( /["']/g, '' ) );
 
-					if ( webfonts.load( fontFamily ) ) {
-						// Font family overrides the lang attribute,
-						// but was it the font family allocated for the current
-						// language?
-						if ( fontFamily === webfonts.getFont( element.lang ) ) {
-							return true;
-						}
+					append( fontQueue, fontFamily );
+				// Load and apply fonts for other language tagged elements (batched)
+				} else if ( element.lang && element.lang !== webfonts.$element.attr( 'lang' ) ) {
+					fontFamily = webfonts.getFont( element.lang );
+					// We do not have fonts for all languages
+					if ( fontFamily !== null ) {
+						append( fontQueue, fontFamily );
+						elementQueue[fontFamily] = elementQueue[fontFamily] || [];
+						elementQueue[fontFamily].push( element );
 					}
 				}
+			} );
 
-				if ( element.lang && element.lang !== webfonts.$element.attr( 'lang' ) ) {
-					fontFamily = webfonts.getFont( element.lang );
-					webfonts.apply( fontFamily, $( element ) );
-				}
+			// Process in batch the accumulated fonts and elements
+			this.load( fontQueue );
+			$.each( elementQueue, function( fontFamily, elements ) {
+				webfonts.apply( fontFamily, $( elements ) );
 			} );
 		},
 
@@ -372,8 +396,8 @@
 		if ( !$style.length ) {
 			$style = $( '<style>' )
 				.prop( {
-					'type': 'text/css',
-					'title': webFontsStyleTitle
+					type: 'text/css',
+					title: webFontsStyleTitle
 				} )
 				.appendTo( $head );
 		}
