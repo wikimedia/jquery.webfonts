@@ -142,7 +142,9 @@
 				}
 			}
 
-			injectCSS( fontFaceRule );
+			if ( fontFaceRule !== '' ) {
+				injectCSS( fontFaceRule );
+			}
 
 			return true;
 		},
@@ -185,7 +187,9 @@
 
 					append( fontQueue, fontFamily );
 				// Load and apply fonts for other language tagged elements (batched)
-				} else if ( element.lang && element.lang !== webfonts.$element.attr( 'lang' ) ) {
+				}
+
+				if ( element.lang && element.lang !== webfonts.$element.attr( 'lang' ) ) {
 					fontFamily = webfonts.getFont( element.lang );
 					// We do not have fonts for all languages
 					if ( fontFamily !== null ) {
