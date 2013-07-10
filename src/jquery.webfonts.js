@@ -405,7 +405,7 @@
 			// Safari sometimes borks on null
 			s.appendChild( document.createTextNode( String( css ) ) );
 		}
-		
+
 		return s;
 	}
 } )( jQuery, window, document );
