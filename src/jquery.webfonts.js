@@ -55,6 +55,11 @@
 	WebFonts.prototype = {
 		constructor: WebFonts,
 
+		/**
+		 * Get the default font family for given language.
+		 * @param {String} language Language code.
+		 * @return {String} Font family name
+		 */
 		getFont: function( language ) {
 			if ( this.options.fontSelector ) {
 				return this.options.fontSelector( this.repository, language || this.language );
@@ -74,16 +79,19 @@
 			this.parse();
 		},
 
+		/**
+		 * TODO: document
+		 */
 		refresh: function() {
 			this.reset();
 			this.init();
 		},
 
 		/**
-		 * Apply a font for the element.
+		 * Apply a font for given elements.
 		 *
-		 * @param fontFamily String: font family name
-		 * @param $element
+		 * @param {String} fontFamily Font family name
+		 * @param {jQuery} $element One or more jQuery elements
 		 */
 		apply: function( fontFamily, $element ) {
 			var fontStack = this.options.fontStack.slice( 0 );
@@ -142,6 +150,8 @@
 				}
 			}
 
+			// In case the list contained only fonts that are already loaded
+			// or non-existing fonts.
 			if ( fontFaceRule !== '' ) {
 				injectCSS( fontFaceRule );
 			}
@@ -177,8 +187,12 @@
 				var fontFamilyStyle, fontFamily,
 					$element = $( element );
 
+				// Note: it depends on the browser whether this returns font names
+				// which don't exist. In Chrome it does, while in Opera it doesn't.
 				fontFamilyStyle = $element.css( 'fontFamily' );
 
+				// Note: It is unclear whether this can ever be falsy. Maybe also
+				// browser specific.
 				if ( fontFamilyStyle ) {
 					fontFamily = fontFamilyStyle.split( ',' )[0];
 
@@ -186,9 +200,9 @@
 					fontFamily = $.trim( fontFamily.replace( /["']/g, '' ) );
 
 					append( fontQueue, fontFamily );
-				// Load and apply fonts for other language tagged elements (batched)
 				}
 
+				// Load and apply fonts for other language tagged elements (batched)
 				if ( element.lang && element.lang !== webfonts.$element.attr( 'lang' ) ) {
 					fontFamily = webfonts.getFont( element.lang );
 					// We do not have fonts for all languages
@@ -210,8 +224,8 @@
 		/**
 		 * List all fonts for the given language
 		 *
-		 * @param language mixed: [optional] language code. If undefined all fonts will be listed
-		 * @return Array font names array
+		 * @param {String} [language] Language code. If undefined all fonts will be listed.
+		 * @return {Array} List of font family names.
 		 */
 		list: function( language ) {
 			var fontName,
@@ -233,7 +247,7 @@
 		/**
 		 * List all languages supported by the repository
 		 *
-		 * @return Array language codes
+		 * @return {Array} List of language codes
 		 */
 		languages: function() {
 			var language,
@@ -272,11 +286,11 @@
 		},
 
 		/**
-		 * Construct the CSS required for the font-family, inject it to the head
-		 * of the body so that it gets loaded.
+		 * Construct the CSS required for the font-family.
 		 *
-		 * @param fontFamily The font-family name
-		 * @param variant The font variant, eg: bold, italic etc. Default is normal.
+		 * @param {String} fontFamily The font-family name
+		 * @param {String} [variant] The font variant, eg: bold, italic etc. Default is normal.
+		 * @return {String} CSS
 		 */
 		getCSS: function( fontFamily, variant ) {
 			var webfonts, base, version, versionSuffix,
@@ -348,7 +362,7 @@
 				fontFaceRule += '\tfont-style: normal;';
 			}
 
-			fontFaceRule += '}';
+			fontFaceRule += '}\n';
 
 			webfonts = this;
 			if ( fontconfig.variants !== undefined ) {
@@ -390,14 +404,10 @@
 	/**
 	 * Create a new style tag and add it to the DOM.
 	 *
-	 * @param css String: CSS text
-	 * @return HTMLStyleElement
+	 * @param {String} css
 	 */
 	function injectCSS( css ) {
 		var s = document.createElement( 'style' );
-
-		s.type = 'text/css';
-		s.rel = 'stylesheet';
 
 		// Insert into document before setting cssText
 		document.getElementsByTagName( 'head' )[0].appendChild( s );
@@ -409,7 +419,5 @@
 			// Safari sometimes borks on null
 			s.appendChild( document.createTextNode( String( css ) ) );
 		}
-
-		return s;
 	}
 } )( jQuery, window, document );
