@@ -1,4 +1,4 @@
-/* global test */
+/* global QUnit */
 ( function( $ ) {
 	'use strict';
 
@@ -10,14 +10,16 @@
 			fontList = fontFamilyString.split( /, */ ); // Create a list
 
 		// Remove the quotes from font names
-		for (fontIndex = 0; fontIndex < fontList.length; ++fontIndex) {
-			fontList[fontIndex] = fontList[fontIndex].replace( /^["']/, '' ).replace( /["']$/, '' );
+		for ( fontIndex = 0; fontIndex < fontList.length; ++fontIndex ) {
+			fontList[fontIndex] = fontList[fontIndex]
+				.replace( /^["']/, '' )
+				.replace( /["']$/, '' );
 		}
 
 		return fontList;
 	}
 
-	test(
+	QUnit.test(
 		'Webfonts loading and application test',
 		function( assert ) {
 			var webfonts, fontName, expectedFontFamilyValue, expectedFontFamilyList,
