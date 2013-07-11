@@ -1,4 +1,3 @@
-/* global QUnit, jQuery */
 ( function( $ ) {
 	'use strict';
 
@@ -10,33 +9,25 @@
 			fontList = fontFamilyString.split( /, */ ); // Create a list
 
 		// Remove the quotes from font names
-		for (fontIndex = 0; fontIndex < fontList.length; ++fontIndex) {
-			fontList[fontIndex] = fontList[fontIndex].replace( /^["']/, '' ).replace( /["']$/, '' );
+		for ( fontIndex = 0; fontIndex < fontList.length; ++fontIndex ) {
+			fontList[fontIndex] = fontList[fontIndex]
+				.replace( /^["']/, '' )
+				.replace( /["']$/, '' );
 		}
 
 		return fontList;
 	}
 
-	test(
+	QUnit.test(
 		'Webfonts loading and application test',
 		function( assert ) {
 			var webfonts, fontName, expectedFontFamilyValue, expectedFontFamilyList,
 				$spanElement, $inputElement, $textareaElement, $buttonElement,
 				localFont = 'Garamond',
 				fallbackFonts = 'Helvetica, Arial, sans-serif',
-				expectedResetFontFamilyList = fontFamilyList( fallbackFonts ),
 				$qunitFixture = $( '<body>' ),
 				// Assign lang to 'my' to make webfonts work
-				$webfontsElement = $( '<div id=\'webfonts-fixture\' lang=\'my\'>' ),
-				defaultFonts = $webfontsElement.css( 'font-family' );
-
-			// Different browsers have different default fonts.
-			// Firefox assigns the default fonts from the preferences and
-			// Chrome doesn't assign anything.
-			if ( defaultFonts !== '' ) {
-				expectedResetFontFamilyList =
-					fontFamilyList( defaultFonts ).concat( expectedResetFontFamilyList );
-			}
+				$webfontsElement = $( '<div id=\'webfonts-fixture\' lang=\'my\'>' );
 
 			$webfontsElement.webfonts( {
 				repository: {
@@ -93,18 +84,16 @@
 
 			// Font resetting
 			webfonts.reset();
-			assert.deepEqual( fontFamilyList( $webfontsElement.css( 'font-family' ) ),
-				expectedResetFontFamilyList, 'The web font on the test <div> was reset' );
+			assert.strictEqual( $webfontsElement.css( 'font-family' ), '',
+				'The web font on the test <div> was reset' );
 			assert.deepEqual( fontFamilyList( $spanElement.css( 'font-family' ) ),
 				[ localFont ],
 				'An element with an explicit font-family remained with it after webfonts resetting' );
-			assert.deepEqual( fontFamilyList( $inputElement.css( 'font-family' ) ),
-				expectedResetFontFamilyList, 'The web font on the test <input> was reset' );
-			assert.deepEqual( fontFamilyList( $textareaElement.css( 'font-family' ) ),
-				expectedResetFontFamilyList,
+			assert.strictEqual( $inputElement.css( 'font-family' ), '',
+				'The web font on the test <input> was reset' );
+			assert.deepEqual( $textareaElement.css( 'font-family' ), '',
 				'The web font on the test <textarea> was reset' );
-			assert.deepEqual( fontFamilyList( $buttonElement.css( 'font-family' ) ),
-				expectedResetFontFamilyList,
+			assert.deepEqual( $buttonElement.css( 'font-family' ), '',
 				'The web font on the test <button> was reset' );
 
 			$webfontsElement.remove();
