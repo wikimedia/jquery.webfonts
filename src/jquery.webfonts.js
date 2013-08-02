@@ -331,17 +331,17 @@
 
 			if ( fontconfig.woff ) {
 				fontFormats.push( '\t\turl(\'' + base + fontconfig.woff + versionSuffix
-						+ '\') format(\'woff\')' );
+					+ '\') format(\'woff\')' );
 			}
 
 			if ( fontconfig.svg ) {
 				fontFormats.push( '\t\turl(\'' + base + fontconfig.svg + versionSuffix + '#'
-						+ fontFamily + '\') format(\'svg\')' );
+					+ fontFamily + '\') format(\'svg\')' );
 			}
 
 			if ( fontconfig.ttf ) {
 				fontFormats.push( '\t\turl(\'' + base + fontconfig.ttf + versionSuffix
-						+ '\') format(\'truetype\')' );
+					+ '\') format(\'truetype\')' );
 			}
 
 			fontFaceRule += fontFormats.join() + ';\n';
