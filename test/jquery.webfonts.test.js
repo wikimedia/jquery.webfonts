@@ -21,15 +21,42 @@
 	QUnit.test(
 		'Webfonts loading and application test',
 		function( assert ) {
-			var webfonts, fontName, expectedFontFamilyValue, expectedFontFamilyList,
+			var webfonts,
+				expectedFontFace, myanmarFontName, expectedFontFamilyValue, expectedFontFamilyList,
 				$spanElement, $inputElement, $textareaElement, $buttonElement,
+				$langElements,
 				localFont = 'Garamond',
 				fallbackFonts = 'Helvetica, Arial, sans-serif',
 				$qunitFixture = $( '<body>' ),
 				// Assign lang to 'my' to make webfonts work
-				$webfontsElement = $( '<div id=\'webfonts-fixture\' lang=\'my\'>' );
+				$myanmarElement = $( '<div>' ).prop( {
+					id: 'webfonts-my-fixture',
+					lang: 'my',
+					dir: 'ltr'
+				} ),
+				$hebrewElement = $( '<span>' )
+					.prop( {
+						id: 'webfonts-he-fixture',
+						lang: 'he',
+						dir: 'rtl'
+					} )
+					.text( 'שלום' );
 
-			$webfontsElement.webfonts( {
+			$spanElement = $( '<span>span content</span>' ).css( 'font-family', localFont );
+			$inputElement = $( '<input value=\'input content\' />' );
+			$textareaElement = $( '<textarea>textarea content</textarea>' );
+			$buttonElement = $( '<button>button label</button>' );
+
+			$myanmarElement.append(
+				$hebrewElement,
+				$spanElement,
+				$inputElement,
+				$textareaElement,
+				$buttonElement
+			);
+
+			$langElements = $( '[lang]' );
+			$myanmarElement.webfonts( {
 				repository: {
 					fonts: {
 						TharLon: {
@@ -38,35 +65,35 @@
 							woff: 'TharLon/TharLon.woff',
 							license: 'OFL 1.1',
 							version: '1.0'
+						},
+						Alef: {
+							eot: 'Alef/Alef.eot',
+							ttf: 'Alef/Alef.ttf',
+							woff: 'Alef/Alef.woff',
+							license: 'OFL 1.1',
+							version: '1.0'
 						}
 					},
 					languages: {
-						my: [ 'TharLon' ]
+						my: [ 'TharLon' ],
+						he: [ 'Alef' ]
 					}
 				}
 			} ).appendTo( $qunitFixture );
 
-			webfonts = $webfontsElement.data( 'webfonts' );
-			fontName = webfonts.fonts[0];
-			expectedFontFamilyValue = '\'' + fontName + '\', ' + fallbackFonts;
+			webfonts = $myanmarElement.data( 'webfonts' );
+			assert.strictEqual( typeof( webfonts ), 'object',
+				'Myanmar webfonts object was created' );
+
+			myanmarFontName = webfonts.fonts[0];
+			expectedFontFamilyValue = '\'' + myanmarFontName + '\', ' + fallbackFonts;
 			expectedFontFamilyList = fontFamilyList( expectedFontFamilyValue );
-			$spanElement = $( '<span>span content</span>' ).css( 'font-family', localFont );
-			$inputElement = $( '<input value=\'input content\' />' );
-			$textareaElement = $( '<textarea>textarea content</textarea>' );
-			$buttonElement = $( '<button>button label</button>' );
 
-			$webfontsElement.append(
-				$spanElement,
-				$inputElement,
-				$textareaElement,
-				$buttonElement
-			);
-
-			assert.strictEqual( fontName, 'TharLon', 'Correct font name loaded' );
+			assert.strictEqual( myanmarFontName, 'TharLon', 'Correct font name loaded' );
 
 			// Font application
-			webfonts.apply( fontName );
-			assert.deepEqual( fontFamilyList( $webfontsElement.css( 'font-family' ) ),
+			webfonts.apply( myanmarFontName );
+			assert.deepEqual( fontFamilyList( $myanmarElement.css( 'font-family' ) ),
 				expectedFontFamilyList,
 				'The web font was applied to font-family of the test <div>' );
 			assert.deepEqual( fontFamilyList( $spanElement.css( 'font-family' ) ),
@@ -84,7 +111,7 @@
 
 			// Font resetting
 			webfonts.reset();
-			assert.strictEqual( $webfontsElement.css( 'font-family' ), '',
+			assert.strictEqual( $myanmarElement.css( 'font-family' ), '',
 				'The web font on the test <div> was reset' );
 			assert.deepEqual( fontFamilyList( $spanElement.css( 'font-family' ) ),
 				[ localFont ],
@@ -96,7 +123,23 @@
 			assert.deepEqual( $buttonElement.css( 'font-family' ), '',
 				'The web font on the test <button> was reset' );
 
-			$webfontsElement.remove();
+			expectedFontFace = "@font-face { font-family: 'TharLon';\n" +
+				"\tsrc: url('fontsTharLon/TharLon.eot?version=1.0&20120101');\n" +
+				"\tsrc: local('TharLon')," +
+				"\t\turl('fontsTharLon/TharLon.woff?version=1.0&20120101') format('woff')," +
+				"\t\turl('fontsTharLon/TharLon.ttf?version=1.0&20120101') format('truetype');\n" +
+				"\tfont-style:normal;	font-style: normal;}\n" +
+				"@font-face { font-family: 'Alef';\n" +
+				"\tsrc: url('fontsAlef/Alef.eot?version=1.0&20120101');\n" +
+				"\tsrc: local('Alef')," +
+				"\t\turl('fontsAlef/Alef.woff?version=1.0&20120101') format('woff')," +
+				"\t\turl('fontsAlef/Alef.ttf?version=1.0&20120101') format('truetype');\n" +
+				"\tfont-style:normal;	font-style: normal;}\n";
+
+			assert.strictEqual( $( 'head' ).find( 'style' ).text(), expectedFontFace,
+				'font-face string created correctly' );
+
+			$myanmarElement.remove();
 		}
 	);
 } )( window.jQuery );
