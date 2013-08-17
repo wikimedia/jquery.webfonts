@@ -123,6 +123,7 @@
 			assert.deepEqual( $buttonElement.css( 'font-family' ), '',
 				'The web font on the test <button> was reset' );
 
+			/*jshint quotmark:double */
 			expectedFontFace = "@font-face { font-family: 'TharLon';\n" +
 				"\tsrc: url('fontsTharLon/TharLon.eot?version=1.0&20120101');\n" +
 				"\tsrc: local('TharLon')," +
@@ -136,6 +137,7 @@
 				"\t\turl('fontsAlef/Alef.ttf?version=1.0&20120101') format('truetype');\n" +
 				"\tfont-style:normal;	font-style: normal;}\n";
 
+			/*jshint quotmark:single */
 			assert.strictEqual( $( 'head' ).find( 'style' ).text(), expectedFontFace,
 				'font-face string created correctly' );
 
