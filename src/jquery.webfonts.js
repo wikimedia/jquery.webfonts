@@ -203,7 +203,7 @@
 				}
 
 				// Load and apply fonts for other language tagged elements (batched)
-				if ( element.lang && element.lang !== webfonts.$element.attr( 'lang' ) ) {
+				if ( element.lang && element.lang !== webfonts.language ) {
 					fontFamily = webfonts.getFont( element.lang );
 					// We do not have fonts for all languages
 					if ( fontFamily !== null ) {
