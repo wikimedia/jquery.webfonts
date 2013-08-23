@@ -103,10 +103,13 @@
 			// jQuery.css().
 			if ( fontFamily ) {
 				this.load( fontFamily );
-				fontStack.unshift( fontFamily );
+				// Avoid duplicates
+				if ( $.inArray( fontFamily, fontStack ) < 0 ) {
+					fontStack.unshift( fontFamily );
+				}
 			}
 
-			if ( !fontFamily || fontFamily === this.originalFontFamily ) {
+			if ( !fontFamily ) {
 				// We are resetting the font to original font.
 				fontStack = [];
 				// This will cause removing inline fontFamily style.
@@ -204,7 +207,16 @@
 
 				// Load and apply fonts for other language tagged elements (batched)
 				if ( element.lang && element.lang !== webfonts.language ) {
+					// Child elements language differs from parent.
 					fontFamily = webfonts.getFont( element.lang );
+
+					if ( !fontFamily ) {
+						// If there is no explicit font for this language, it will
+						// inherit the webfont for the parent.  But that is undesirable here
+						// since language is different. So inherit the original font of the
+						// element. Define it explicitly so that inheritance is broken.
+						fontFamily = webfonts.originalFontFamily;
+					}
 					// We do not have fonts for all languages
 					if ( fontFamily !== null ) {
 						append( fontQueue, fontFamily );
