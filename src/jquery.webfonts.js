@@ -103,10 +103,13 @@
 			// jQuery.css().
 			if ( fontFamily ) {
 				this.load( fontFamily );
-				fontStack.unshift( fontFamily );
+				// Avoid duplicates
+				if ( $.inArray( fontFamily, fontStack ) < 0 ) {
+					fontStack.unshift( fontFamily );
+				}
 			}
 
-			if ( !fontFamily || fontFamily === this.originalFontFamily ) {
+			if ( !fontFamily ) {
 				// We are resetting the font to original font.
 				fontStack = [];
 				// This will cause removing inline fontFamily style.
