@@ -207,7 +207,7 @@
 
 				// Load and apply fonts for other language tagged elements (batched)
 				if ( element.lang && element.lang !== webfonts.language ) {
-					// Child elements language differs from parent.
+					// Child element's language differs from parent.
 					fontFamily = webfonts.getFont( element.lang );
 
 					if ( !fontFamily ) {
