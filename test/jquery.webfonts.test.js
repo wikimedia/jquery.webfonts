@@ -27,7 +27,7 @@
 				$langElements,
 				localFont = 'Garamond',
 				fallbackFonts = 'Helvetica, Arial, sans-serif',
-				$qunitFixture = $( '<body>' ),
+				$qunitFixture = $( '#qunit-fixture' ),
 				// Assign lang to 'my' to make webfonts work
 				$myanmarElement = $( '<div>' ).prop( {
 					id: 'webfonts-my-fixture',
@@ -144,4 +144,100 @@
 			$myanmarElement.remove();
 		}
 	);
+
+	QUnit.test(
+		'Webfonts on mixed language html',
+		function( assert ) {
+			var testHTML = '<div lang="hi" id="#parent" ><p>Hindi text</p>'
+				+ '<div><textarea lang="ml"></textarea></div>'
+				+ '<div><textarea lang="en"></textarea></div>'
+				+ '</div>',
+				fallbackFonts = 'Helvetica, Arial, sans-serif',
+				webfontOptions = {
+					repository: {
+						languages: {
+							hi: [ 'HindiFont' ],
+							ml: [ 'MalayalamFont' ]
+						}
+					}
+				},
+				$qunitFixture = $( '#qunit-fixture' );
+			$qunitFixture.append( $( testHTML ) )
+				.webfonts( webfontOptions );
+			assert.strictEqual(
+				$qunitFixture.find( '[lang=hi]' ).css( 'font-family' ).replace( / /g, '' ),
+				// we are removing whitespaces because FF uses comma and chrome uses comma
+				// with space for fontfamily string items
+				( 'HindiFont, ' + fallbackFonts).replace( / /g, '' ),
+				'Hindi gets Hindi font'
+			);
+
+			// From where monospace comes? Browsers do weird stuff.
+			assert.strictEqual( $qunitFixture.find( '[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
+				( 'monospace,' + fallbackFonts).replace( / /g, '' ),
+				'English text area gets monospace font'
+			);
+			assert.strictEqual( $qunitFixture.find( '[lang=ml]' ).css( 'font-family' ).replace( / /g, '' ),
+				( 'MalayalamFont, ' + fallbackFonts ).replace( / /g, '' ),
+				'Malayalam textarea gets Malayalam font'
+			);
+
+			testHTML = '<div lang="en" id="#parent" ><p>English text</p>'
+				+ '<div><textarea lang="hi"></textarea></div>'
+				+ '<div><textarea lang="en"></textarea></div>'
+				+ '</div>';
+			$qunitFixture.empty().append( $( testHTML ) ).webfonts( 'refresh' );
+			assert.strictEqual( $qunitFixture.find( '[lang=hi]' ).css( 'font-family' ).replace( / /g, '' ),
+				( 'HindiFont, ' + fallbackFonts ).replace( / /g, '' ),
+				'Hindi textarea gets Hindi font'
+			) ;
+			assert.strictEqual( $qunitFixture.find( 'div[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
+				fallbackFonts.replace( / /g, '' ),
+				'English div font is fallbackFonts'
+			);
+			assert.strictEqual( $qunitFixture.find( 'textarea[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
+				( 'monospace,' + fallbackFonts).replace( / /g, '' ),
+				'English text area get monospace font'
+			);
+
+			testHTML = '<div lang="hi" id="#parent" ><p>Hindi text</p>'
+				+ '<div lang="ml"></div>'
+				+ '<div lang="en"></div>'
+				+ '</div>';
+			$qunitFixture.empty().append( $( testHTML ) ).webfonts( 'refresh' );
+			assert.strictEqual( $qunitFixture.find( '[lang=hi]' ).css( 'font-family' ).replace( / /g, '' ),
+				( 'HindiFont, ' + fallbackFonts ).replace( / /g, '' ),
+				'Hindi div gets Hindi font'
+			 );
+			assert.strictEqual( $qunitFixture.find( '[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
+				fallbackFonts.replace( / /g, '' ),
+				'English div font is fallbackFonts'
+			);
+			assert.strictEqual( $qunitFixture.find( '[lang=ml]' ).css( 'font-family' ).replace( / /g, '' ),
+				( 'MalayalamFont, ' + fallbackFonts ).replace( / /g, '' ),
+				'Malayalam div gets Malayalam font'
+			);
+
+
+			testHTML = '<div style="font-family: serif;"><p>Hindi text</p>'
+				+ '<div lang="ml"></div>'
+				+ '<div lang="en"></div>'
+				+ '<div><textarea lang="en"></textarea></div>'
+				+ '</div>';
+			$qunitFixture.empty().append( $( testHTML ) ).webfonts( 'refresh' );
+
+			assert.strictEqual( $qunitFixture.find( 'div[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
+				( 'serif, ' + fallbackFonts ).replace( / /g, '' ),
+				'English div inherits font'
+			 );
+			assert.strictEqual( $qunitFixture.find( 'textarea[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
+				( 'monospace, ' + fallbackFonts ).replace( / /g, '' ),
+				'English textarea is monospace'
+			);
+			assert.strictEqual( $qunitFixture.find( '[lang=ml]' ).css( 'font-family' ).replace( / /g, '' ),
+				( 'MalayalamFont, ' + fallbackFonts ).replace( / /g, '' ),
+				'Malayalam div gets Malayalam font'
+			);
+
+	} );
 } )( window.jQuery );

@@ -206,17 +206,18 @@
 				}
 
 				// Load and apply fonts for other language tagged elements (batched)
-				if ( element.lang && element.lang !== webfonts.language ) {
+				if ( element.lang ) {
 					// Child element's language differs from parent.
-					fontFamily = webfonts.getFont( element.lang );
+					// If there is no explicit font for this language, it will
+					// inherit the webfont for the parent.  But that is undesirable here
+					// since language is different. So inherit the original font of the
+					// element. Define it explicitly so that inheritance is broken.
 
-					if ( !fontFamily ) {
-						// If there is no explicit font for this language, it will
-						// inherit the webfont for the parent.  But that is undesirable here
-						// since language is different. So inherit the original font of the
-						// element. Define it explicitly so that inheritance is broken.
-						fontFamily = webfonts.originalFontFamily;
-					}
+					// If the language has a font, use it or use original font
+					// of the element to which this extension is applied.
+					fontFamily = webfonts.getFont( element.lang ) || fontFamily
+						||  webfonts.originalFontFamily;
+
 					// We do not have fonts for all languages
 					if ( fontFamily !== null ) {
 						append( fontQueue, fontFamily );
