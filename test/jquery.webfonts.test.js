@@ -227,8 +227,8 @@
 			$qunitFixture.empty().append( $( testHTML ) ).webfonts( 'refresh' );
 
 			assert.strictEqual( $qunitFixture.find( 'div[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
-				( 'serif, ' + fallbackFonts ).replace( / /g, '' ),
-				'English div inherits font'
+				fallbackFonts.replace( / /g, '' ),
+				'English div font is fallbackFonts'
 			 );
 			assert.strictEqual( $qunitFixture.find( 'textarea[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
 				( 'monospace, ' + fallbackFonts ).replace( / /g, '' ),

@@ -213,10 +213,23 @@
 					// since language is different. So inherit the original font of the
 					// element. Define it explicitly so that inheritance is broken.
 
-					// If the language has a font, use it or use original font
-					// of the element to which this extension is applied.
-					fontFamily = webfonts.getFont( element.lang ) || fontFamily
-						||  webfonts.originalFontFamily;
+					// If the language has a font, use it
+					fontFamily = webfonts.getFont( element.lang );
+
+					if ( !fontFamily ) {
+						if ( fontFamilyStyle === 'monospace' ) {
+							// This is tricky. For editable fields, the browsers
+							// apply monospace font style for scripts monospace applies.
+							// Overriding it with our font style is not desirable in
+							// input fields.
+							// See https://bugzilla.wikimedia.org/53734
+							fontFamily = fontFamilyStyle;
+						} else {
+							// use original font of the element to
+							// which this extension is applied.
+							fontFamily = webfonts.originalFontFamily;
+						}
+					}
 
 					// We do not have fonts for all languages
 					if ( fontFamily !== null ) {
