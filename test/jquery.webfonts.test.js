@@ -129,13 +129,13 @@
 				"\tsrc: local('TharLon')," +
 				"\t\turl('fontsTharLon/TharLon.woff?version=1.0&20120101') format('woff')," +
 				"\t\turl('fontsTharLon/TharLon.ttf?version=1.0&20120101') format('truetype');\n" +
-				"\tfont-style:normal;	font-style: normal;}\n" +
+				"\tfont-style: normal;}\n" +
 				"@font-face { font-family: 'Alef';\n" +
 				"\tsrc: url('fontsAlef/Alef.eot?version=1.0&20120101');\n" +
 				"\tsrc: local('Alef')," +
 				"\t\turl('fontsAlef/Alef.woff?version=1.0&20120101') format('woff')," +
 				"\t\turl('fontsAlef/Alef.ttf?version=1.0&20120101') format('truetype');\n" +
-				"\tfont-style:normal;	font-style: normal;}\n";
+				"\tfont-style: normal;}\n";
 
 			/*jshint quotmark:single */
 			assert.strictEqual( $( 'head' ).find( 'style' ).text(), expectedFontFace,

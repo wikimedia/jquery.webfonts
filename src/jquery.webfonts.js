@@ -376,8 +376,6 @@
 				fontFaceRule += '\tfont-weight:' + fontconfig.fontweight + ';';
 			}
 
-			fontFaceRule += '\tfont-style:' + fontStyle + ';';
-
 			if ( fontconfig.fontweight !== undefined ) {
 				fontFaceRule += '\tfont-weight:' + fontconfig.fontweight + ';';
 			}
