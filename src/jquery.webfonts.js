@@ -190,6 +190,10 @@
 				var fontFamilyStyle, fontFamily,
 					$element = $( element );
 
+				if ( $element.is( webfonts.options.exclude ) ) {
+					return;
+				}
+
 				// Note: it depends on the browser whether this returns font names
 				// which don't exist. In Chrome it does, while in Opera it doesn't.
 				fontFamilyStyle = $element.css( 'fontFamily' );
