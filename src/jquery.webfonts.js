@@ -210,31 +210,25 @@
 				}
 
 				// Load and apply fonts for other language tagged elements (batched)
-				if ( element.lang ) {
-					// Child element's language differs from parent.
-					// If there is no explicit font for this language, it will
-					// inherit the webfont for the parent.  But that is undesirable here
-					// since language is different. So inherit the original font of the
-					// element. Define it explicitly so that inheritance is broken.
-
-					// If the language has a font, use it
+				if ( element.lang && element.lang !== webfonts.language ) {
+					// Element has explicit font family
 					fontFamily = webfonts.getFont( element.lang );
 
 					if ( !fontFamily ) {
-						if ( fontFamilyStyle === 'monospace' ) {
-							// This is tricky. For editable fields, the browsers
-							// apply monospace font style for scripts monospace applies.
-							// Overriding it with our font style is not desirable in
-							// input fields.
-							// See https://bugzilla.wikimedia.org/53734
-							fontFamily = fontFamilyStyle;
-						} else {
-							// use original font of the element to
-							// which this extension is applied.
-							fontFamily = webfonts.originalFontFamily;
+						// No font preference for the language.
+						// Check if we need a reset for this language.
+						// If parent element(the element to which webfonts applied ) font remained
+						// same, there is no reset to do.
+						if ( webfonts.$element.css( 'fontFamily' ) !== webfonts.originalFontFamily ) {
+							// Parent font changed.
+							// Is there an inheritance?
+							// ie Does the font for this element same as parent's font?
+							if( fontFamilyStyle === webfonts.$element.css( 'fontFamily' ) ) {
+								// break it, reset to original font.
+								fontFamily = webfonts.originalFontFamily;
+							}
 						}
 					}
-
 					// We do not have fonts for all languages
 					if ( fontFamily !== null ) {
 						append( fontQueue, fontFamily );
