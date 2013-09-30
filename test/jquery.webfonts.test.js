@@ -174,7 +174,7 @@
 
 			// From where monospace comes? Browsers do weird stuff.
 			assert.strictEqual( $qunitFixture.find( '[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
-				( 'HindiFont, ' + fallbackFonts).replace( / /g, '' ),
+				( 'HindiFont, ' + fallbackFonts ).replace( / /g, '' ),
 				'English text area gets inherited fonts since parent language does not have monospace defined'
 			);
 			assert.strictEqual( $qunitFixture.find( '[lang=ml]' ).css( 'font-family' ).replace( / /g, '' ),
@@ -182,20 +182,20 @@
 				'Malayalam textarea gets Malayalam font'
 			);
 
-			testHTML = '<div lang="pt" id="#parent" ><p>Hindi text</p>'
-				+ '<div><textarea lang="ml"></textarea></div>'
-				+ '<div><textarea lang="en"></textarea></div>'
-				+ '</div>';
+			testHTML = '<div lang="pt" id="#parent"><p>Hindi text</p>' +
+				'<div><textarea lang="ml"></textarea></div>' +
+				'<div><textarea lang="en"></textarea></div>' +
+				'</div>';
 			$qunitFixture.empty().append( $( testHTML ) ).webfonts( 'refresh' );
 			assert.strictEqual( $qunitFixture.find( '[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
 				'monospace',
 				'English text area gets monospace since parent language has monospace defined'
 			);
 
-			testHTML = '<div lang="en" id="#parent" ><p>English text</p>'
-				+ '<div><textarea lang="hi"></textarea></div>'
-				+ '<div><textarea lang="en"></textarea></div>'
-				+ '</div>';
+			testHTML = '<div lang="en" id="#parent" ><p>English text</p>' +
+				'<div><textarea lang="hi"></textarea></div>' +
+				'<div><textarea lang="en"></textarea></div>' +
+				'</div>';
 			$qunitFixture.empty().append( $( testHTML ) ).webfonts( 'refresh' );
 			assert.strictEqual( $qunitFixture.find( '[lang=hi]' ).css( 'font-family' ).replace( / /g, '' ),
 				( 'HindiFont, ' + fallbackFonts ).replace( / /g, '' ),
@@ -210,10 +210,10 @@
 				'English text area get monospace font'
 			);
 
-			testHTML = '<div lang="hi" id="#parent" ><p>Hindi text</p>'
-				+ '<div lang="ml"></div>'
-				+ '<div lang="en"></div>'
-				+ '</div>';
+			testHTML = '<div lang="hi" id="#parent" ><p>Hindi text</p>' +
+				'<div lang="ml"></div>' +
+				'<div lang="en"></div>' +
+				'</div>';
 			$qunitFixture.empty().append( $( testHTML ) ).webfonts( 'refresh' );
 			assert.strictEqual( $qunitFixture.find( '[lang=hi]' ).css( 'font-family' ).replace( / /g, '' ),
 				( 'HindiFont, ' + fallbackFonts ).replace( / /g, '' ),
@@ -228,12 +228,11 @@
 				'Malayalam div gets Malayalam font'
 			);
 
-
-			testHTML = '<div style="font-family: serif;"><p>Hindi text</p>'
-				+ '<div lang="ml"></div>'
-				+ '<div lang="en"></div>'
-				+ '<div><textarea lang="en"></textarea></div>'
-				+ '</div>';
+			testHTML = '<div style="font-family: serif;"><p>Hindi text</p>' +
+				'<div lang="ml"></div>' +
+				'<div lang="en"></div>' +
+				'<div><textarea lang="en"></textarea></div>' +
+				'</div>';
 			$qunitFixture.empty().append( $( testHTML ) ).webfonts( 'refresh' );
 
 			assert.strictEqual( $qunitFixture.find( 'div[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),

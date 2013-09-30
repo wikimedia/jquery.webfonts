@@ -211,24 +211,25 @@
 
 				// Load and apply fonts for other language tagged elements (batched)
 				if ( element.lang && element.lang !== webfonts.language ) {
-					// Element has explicit font family
 					fontFamily = webfonts.getFont( element.lang );
 
 					if ( !fontFamily ) {
 						// No font preference for the language.
-						// Check if we need a reset for this language.
-						// If parent element(the element to which webfonts applied ) font remained
-						// same, there is no reset to do.
+						// Check if we need to reset for this language.
+						// If the font of the parent element, to which webfonts were applied,
+						// remained the same, there is no need to reset.
 						if ( webfonts.$element.css( 'fontFamily' ) !== webfonts.originalFontFamily ) {
-							// Parent font changed.
+							// The parent font changed.
 							// Is there an inheritance?
-							// ie Does the font for this element same as parent's font?
-							if( fontFamilyStyle === webfonts.$element.css( 'fontFamily' ) ) {
-								// break it, reset to original font.
+							// Is the font for this element the same as parent's font?
+							if ( fontFamilyStyle === webfonts.$element.css( 'fontFamily' ) ) {
+								// Break inheritance of the font from the parent element
+								// by applying the original font to this element
 								fontFamily = webfonts.originalFontFamily;
 							}
 						}
 					}
+
 					// We do not have fonts for all languages
 					if ( fontFamily !== null ) {
 						append( fontQueue, fontFamily );
