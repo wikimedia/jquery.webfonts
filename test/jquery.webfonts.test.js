@@ -200,7 +200,7 @@
 			assert.strictEqual( $qunitFixture.find( '[lang=hi]' ).css( 'font-family' ).replace( / /g, '' ),
 				( 'HindiFont, ' + fallbackFonts ).replace( / /g, '' ),
 				'Hindi textarea gets Hindi font'
-			) ;
+			);
 			assert.strictEqual( $qunitFixture.find( 'div[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
 				'sans-serif',
 				'English div font is fallbackFonts'
@@ -218,7 +218,7 @@
 			assert.strictEqual( $qunitFixture.find( '[lang=hi]' ).css( 'font-family' ).replace( / /g, '' ),
 				( 'HindiFont, ' + fallbackFonts ).replace( / /g, '' ),
 				'Hindi div gets Hindi font'
-			 );
+			);
 			assert.strictEqual( $qunitFixture.find( '[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
 				( 'HindiFont, ' + fallbackFonts ).replace( / /g, '' ),
 				'English div font is inherited'
@@ -238,7 +238,7 @@
 			assert.strictEqual( $qunitFixture.find( 'div[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
 				'serif',
 				'English div font is inherited'
-			 );
+			);
 			assert.strictEqual( $qunitFixture.find( 'textarea[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
 				'monospace',
 				'English textarea is monospace'
