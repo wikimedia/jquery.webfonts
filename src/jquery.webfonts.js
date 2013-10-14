@@ -94,7 +94,9 @@
 		 * @param {jQuery} $element One or more jQuery elements
 		 */
 		apply: function( fontFamily, $element ) {
-			var fontStack = this.options.fontStack.slice( 0 );
+			var fontStackString, $specialElememts,
+				webfonts = this,
+				fontStack = this.options.fontStack.slice( 0 );
 
 			$element = $element || this.$element;
 
@@ -115,14 +117,26 @@
 				// This will cause removing inline fontFamily style.
 			}
 
+			fontStackString = fontStack.join();
 			// Set the font of this element if it's not excluded
-			$element.not( this.options.exclude ).css( 'font-family', fontStack.join() );
+			$element.not( this.options.exclude ).css( 'font-family', fontStackString );
 
 			// Set the font of this element's children if they are not excluded.
 			// font-family of <input>, <textarea> and <button> must be changed explicitly.
-			$element.find( 'textarea, input, button' )
-				.not( this.options.exclude )
-				.css( 'font-family', fontStack.join() );
+			$specialElememts = $element
+				.find( 'textarea, input, button' )
+				.not( this.options.exclude );
+
+			$specialElememts.each( function ( index, element ) {
+				var $element = $( element );
+
+				// Skip elements with a different language
+				if ( $element.prop( 'lang' ) !== webfonts.language ) {
+					return true;
+				}
+
+				$( element ).css( 'font-family', fontStackString );
+			} );
 		},
 
 		/**
@@ -220,8 +234,7 @@
 						// remained the same, there is no need to reset.
 						if ( webfonts.$element.css( 'fontFamily' ) !== webfonts.originalFontFamily ) {
 							// The parent font changed.
-							// Is there an inheritance?
-							// Is the font for this element the same as parent's font?
+							// Is the font for this element the same as the parent's font?
 							if ( fontFamilyStyle === webfonts.$element.css( 'fontFamily' ) ) {
 								// Break inheritance of the font from the parent element
 								// by applying the original font to this element
