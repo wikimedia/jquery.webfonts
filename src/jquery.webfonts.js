@@ -336,7 +336,7 @@
 
 			base = this.repository.base;
 			version = fontconfig.version;
-			versionSuffix = '?version=' + version + '&20120101';
+			versionSuffix = '?version=' + version;
 			fontFaceRule = '@font-face { font-family: \'' + fontFamily + '\';\n';
 			userAgent = window.navigator.userAgent;
 			fontStyle = fontconfig.fontstyle || 'normal';
