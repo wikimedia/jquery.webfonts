@@ -31,7 +31,7 @@
 				// Assign lang to 'my' to make webfonts work
 				$myanmarElement = $( '<div>' ).prop( {
 					id: 'webfonts-my-fixture',
-					lang: 'my',
+					lang: 'MY', // language tag should be case insensitive.
 					dir: 'ltr'
 				} ),
 				$hebrewElement = $( '<span>' )
