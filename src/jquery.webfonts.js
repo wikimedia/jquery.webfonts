@@ -61,10 +61,10 @@
 		 * @return {String} Font family name
 		 */
 		getFont: function( language ) {
-			language = language.toLowerCase();
+			language = ( language || this.language ).toLowerCase();
 
 			if ( this.options.fontSelector ) {
-				return this.options.fontSelector( this.repository, language || this.language );
+				return this.options.fontSelector( this.repository, language );
 			} else {
 				return this.repository.defaultFont( language );
 			}
