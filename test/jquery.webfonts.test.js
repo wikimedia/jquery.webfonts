@@ -248,5 +248,25 @@
 				'Malayalam div gets Malayalam font'
 			);
 
+			testHTML = '<div style="font-family: serif;"><p>Hindi text</p>' +
+				'<div lang="ml" style="font-family:\'fancyMalayalamfont\';"></div>' +
+				'<div lang="en" style="font-family:\'fancyEnglishfont\';"></div>' +
+				'<div><textarea lang="en"></textarea></div>' +
+				'</div>';
+			$qunitFixture.empty().append( $( testHTML ) ).webfonts( 'refresh' );
+
+			assert.strictEqual( $qunitFixture.find( 'div[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
+				'fancyEnglishfont',
+				'English textarea is fancyEnglishfont, reset did not happen even when language changed.'
+			);
+			assert.strictEqual( $qunitFixture.find( 'textarea[lang=en]' ).css( 'font-family' ).replace( / /g, '' ),
+				'monospace',
+				'English div font is inherited'
+			);
+			assert.strictEqual( $qunitFixture.find( '[lang=ml]' ).css( 'font-family' ).replace( / /g, '' ),
+				'fancyMalayalamfont',
+				'Malayalam div gets fancyMalayalamfont font, reset did not happen even when language changed.'
+			);
+
 	} );
 } )( window.jQuery );
