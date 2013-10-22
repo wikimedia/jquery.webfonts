@@ -213,7 +213,15 @@
 
 				// Load and apply fonts for other language tagged elements (batched)
 				if ( element.lang && element.lang !== webfonts.language ) {
-					fontFamily = webfonts.getFont( element.lang );
+					// language differs. We may want to apply a different font.
+					if ( webfonts.hasExplicitFontStyle ( $element ) ) {
+						// respect the explicit font family style. Do not override.
+						// This style may be from css, inheritance, or even from
+						// browser settings.
+						return;
+					} else {
+						fontFamily = webfonts.getFont( element.lang );
+					}
 
 					if ( !fontFamily ) {
 						// No font preference for the language.
@@ -246,6 +254,24 @@
 			$.each( elementQueue, function( fontFamily, elements ) {
 				webfonts.apply( fontFamily, $( elements ) );
 			} );
+		},
+
+		/**
+		 * Find out whether an element has explicit non generic font family style
+		 * For the practical purpose we check whether font is same as top element
+		 * or having any of generic font family
+		 * http://www.w3.org/TR/CSS2/fonts.html#generic-font-families
+		 * @param {jQuery} $element
+		 * @return {boolean}
+		 */
+		hasExplicitFontStyle: function ( $element ) {
+			var elementFontFamily = $element.css( 'fontFamily' );
+
+			// whether the font is inherited from top element to which plugin applied
+			return this.$element.css( 'fontFamily' ) !== elementFontFamily
+				// whether the element has generic font family
+				&& ( $.inArray( elementFontFamily,
+					['monospace', 'serif', 'cursive','fantasy', 'sans-serif'] ) < 0 );
 		},
 
 		/**
