@@ -1,7 +1,7 @@
 jquery.webfonts
 ===============
 
-jQuery based webfonts extension
+jQuery based webfonts extension. This is a project by Wikimedia foundation's [Language Engineering team](http://wikimediafoundation.org/wiki/Language_Engineering_team)
 
 ## Introduction
 
@@ -38,4 +38,7 @@ See GPL-LICENSE and MIT-LICENSE for details.
 
 ## Developers
 
-This project is part of Wikimedia Foundation's Project Milkshake. See https://www.mediawiki.org/wiki/Project_Milkshake
+This project is part of Wikimedia Foundation's Project Milkshake. See https://www.mediawiki.org/wiki/Project_Milkshake. 
+
+For details on how Wikimedia is using this extension for providing webfonts to wikis,
+read https://www.mediawiki.org/wiki/Universal_Language_Selector/WebFonts
