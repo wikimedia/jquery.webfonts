@@ -58,13 +58,14 @@
 		/**
 		 * Get the default font family for given language.
 		 * @param {String} language Language code.
+		 * @param {array} classes
 		 * @return {String} Font family name
 		 */
-		getFont: function( language ) {
+		getFont: function( language, classes ) {
 			language = ( language || this.language ).toLowerCase();
 
 			if ( this.options.fontSelector ) {
-				return this.options.fontSelector( this.repository, language );
+				return this.options.fontSelector( this.repository, language, classes );
 			} else {
 				return this.repository.defaultFont( language );
 			}
@@ -199,7 +200,6 @@
 				// Note: it depends on the browser whether this returns font names
 				// which don't exist. In Chrome it does, while in Opera it doesn't.
 				fontFamilyStyle = $element.css( 'fontFamily' );
-
 				// Note: It is unclear whether this can ever be falsy. Maybe also
 				// browser specific.
 				if ( fontFamilyStyle ) {
@@ -220,7 +220,7 @@
 						// browser settings.
 						return;
 					} else {
-						fontFamily = webfonts.getFont( element.lang );
+						fontFamily = webfonts.getFont( element.lang, element.className.split(/\s+/) );
 					}
 
 					if ( !fontFamily ) {
@@ -269,8 +269,8 @@
 
 			// whether the font is inherited from top element to which plugin applied
 			return this.$element.css( 'fontFamily' ) !== elementFontFamily
-				// whether the element has generic font family
-				&& ( $.inArray( elementFontFamily,
+					// whether the element has generic font family
+					&& ( $.inArray( elementFontFamily,
 					['monospace', 'serif', 'cursive','fantasy', 'sans-serif'] ) < 0 );
 		},
 
