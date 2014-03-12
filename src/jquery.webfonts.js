@@ -118,14 +118,18 @@
 				// This will cause removing inline fontFamily style.
 			}
 
-			// Set the font of this element if it's not excluded
-			$element.not( this.options.exclude ).css( 'font-family', fontStack.join() );
+			// Set the font of this element if it's not excluded.
+			// Add class webfonts-changed when webfonts are applied.
+			$element.not( this.options.exclude )
+				.css( 'font-family', fontStack.join() )
+				.addClass( 'webfonts-changed' );
 
 			// Set the font of this element's children if they are not excluded.
 			// font-family of <input>, <textarea> and <button> must be changed explicitly.
-			$element.find( 'textarea, input, button' )
-				.not( this.options.exclude )
-				.css( 'font-family', fontStack.join() );
+			// Add class webfonts-changed when webfonts are applied.
+			$element.find( 'textarea, input, button' ).not( this.options.exclude )
+				.css( 'font-family', fontStack.join() )
+				.addClass( 'webfonts-changed' );
 		},
 
 		/**
@@ -328,6 +332,9 @@
 		 * Reset the font-family style.
 		 */
 		reset: function() {
+			this.$element.find( '.webfonts-changed' )
+				.removeClass( '.webfonts-changed' )
+				.css( 'font-family', '' );
 			this.apply( this.originalFontFamily );
 		},
 

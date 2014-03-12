@@ -269,4 +269,47 @@
 			);
 
 	} );
+
+	QUnit.test(
+		'Webfonts apply/reset with inline css',
+		function ( assert ) {
+			var testHTML, fallbackFonts, webfontOptions, $qunitFixture;
+			testHTML = '<div class="resettest">'
+				+ '<div style="font-family: FontA,sans;"></div>'
+				+ '<span lang="gu"></span></div>';
+			fallbackFonts = 'Helvetica, Arial, sans-serif';
+			webfontOptions = {
+				repository: {
+					languages: {
+						gu: [ 'GujaratiFont' ]
+					}
+				}
+			};
+			$qunitFixture = $( '#qunit-fixture' );
+
+			$qunitFixture.append( $( testHTML ) );
+			$qunitFixture.find( '.resettest' ).webfonts( webfontOptions );
+
+			// Apply webfonts and compare webfonts applied in span.
+			assert.strictEqual( $qunitFixture.find( 'span[lang=gu]' ).css( 'font-family' ).replace( / /g, '' ),
+				( 'GujaratiFont, ' + fallbackFonts ).replace( / /g, '' ),
+				'Gujarati span gets Gujarati font after applying webfonts'
+			);
+
+			assert.strictEqual( $qunitFixture.find( 'span[lang=gu]' ).hasClass( 'webfonts-changed' ),
+				true,
+				'Gujarati span has class webfonts-changed'
+			);
+			
+			// Reset webfonts.
+			$qunitFixture.find( '.resettest' ).data( 'webfonts' ).reset();
+
+			// Compare fonts from span.
+			assert.strictEqual( $qunitFixture.find( 'span[lang=gu]' ).css( 'font-family' ).replace( / /g, '' ),
+				( fallbackFonts ).replace( / /g, '' ),
+				'Fallback font is used after reset'
+			);
+
+	} );
+
 } )( window.jQuery );
