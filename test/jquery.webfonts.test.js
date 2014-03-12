@@ -56,7 +56,7 @@
 			);
 
 			$langElements = $( '[lang]' );
-			$myanmarElement.webfonts( {
+			$myanmarElement.appendTo( $qunitFixture ).webfonts( {
 				repository: {
 					fonts: {
 						TharLon: {
@@ -79,7 +79,7 @@
 						he: [ 'Alef' ]
 					}
 				}
-			} ).appendTo( $qunitFixture );
+			} );
 
 			webfonts = $myanmarElement.data( 'webfonts' );
 			assert.strictEqual( typeof( webfonts ), 'object',
@@ -111,16 +111,16 @@
 
 			// Font resetting
 			webfonts.reset();
-			assert.strictEqual( $myanmarElement.css( 'font-family' ), '',
+			assert.strictEqual( $myanmarElement.css( 'font-family' ), fallbackFonts,
 				'The web font on the test <div> was reset' );
 			assert.deepEqual( fontFamilyList( $spanElement.css( 'font-family' ) ),
 				[ localFont ],
 				'An element with an explicit font-family remained with it after webfonts resetting' );
-			assert.strictEqual( $inputElement.css( 'font-family' ), '',
+			assert.strictEqual( $inputElement.css( 'font-family' ), fallbackFonts,
 				'The web font on the test <input> was reset' );
-			assert.deepEqual( $textareaElement.css( 'font-family' ), '',
+			assert.deepEqual( $textareaElement.css( 'font-family' ), fallbackFonts,
 				'The web font on the test <textarea> was reset' );
-			assert.deepEqual( $buttonElement.css( 'font-family' ), '',
+			assert.deepEqual( $buttonElement.css( 'font-family' ), fallbackFonts,
 				'The web font on the test <button> was reset' );
 
 			/*jshint quotmark:double */
