@@ -245,7 +245,7 @@
 					}
 
 					// We do not have fonts for all languages
-					if ( fontFamily !== null ) {
+					if ( fontFamily ) {
 						append( fontQueue, fontFamily );
 						elementQueue[fontFamily] = elementQueue[fontFamily] || [];
 						elementQueue[fontFamily].push( element );
