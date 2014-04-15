@@ -300,7 +300,7 @@
 				true,
 				'Gujarati span has class webfonts-changed'
 			);
-			
+
 			// Reset webfonts.
 			$qunitFixture.find( '.resettest' ).data( 'webfonts' ).reset();
 
@@ -310,6 +310,50 @@
 				'Fallback font is used after reset'
 			);
 
+	} );
+
+	QUnit.test(
+		'Overridable option test',
+		function ( assert ) {
+			var testHTML, fallbackFonts, webfontOptions, $qunitFixture;
+			testHTML = '<div lang=my class="overridabletest">'
+				+ '<h1 lang=my style="font-family: LinuxLibertine, Georgia, Times, serif">Heading 1</h1>'
+				+ '<p lang=my style="font-family: sans-serif;">random text</p>'
+				+ '<h2 lang=my style="font-family: FancyMyanmarFont">Heading 2</h2>'
+				+ '<h3 style="font-family: LinuxLibertine, Georgia, Times, serif">Heading 3</h3>'
+				+ '</div>';
+			fallbackFonts = 'Helvetica, Arial, sans-serif';
+			webfontOptions = {
+				repository: {
+					languages: {
+						my: [ 'Tharlon' ]
+					}
+				},
+				overridableFontFamilies: ['LinuxLibertine, Georgia, Times, serif']
+			};
+			$qunitFixture = $( '#qunit-fixture' );
+			$qunitFixture.append( $( testHTML ) );
+			$qunitFixture.find( '.overridabletest' ).webfonts( webfontOptions );
+
+			assert.strictEqual( $qunitFixture.find( 'h1' ).css( 'font-family' ).replace( / /g, '' ),
+				( 'Tharlon, ' + fallbackFonts ).replace( / /g, '' ),
+				'h1 gets Tharlon font after applying webfonts. LinuxLibertine was overridden'
+			);
+
+			assert.strictEqual( $qunitFixture.find( 'p' ).css( 'font-family' ).replace( / /g, '' ),
+				( 'Tharlon, ' + fallbackFonts ).replace( / /g, '' ),
+				'Paragraph gets Tharlon font after applying webfonts. LinuxLibertine was overridden'
+			);
+
+			assert.strictEqual( $qunitFixture.find( 'h2' ).css( 'font-family' ).replace( / /g, '' ),
+				( 'FancyMyanmarFont' ).replace( / /g, '' ),
+				'h2 gets FancyMyanmarFont font after applying webfonts. FancyMyanmarFont is not overridden'
+			);
+
+			assert.strictEqual( $qunitFixture.find( 'h3' ).css( 'font-family' ).replace( / /g, '' ),
+				( 'Tharlon, ' + fallbackFonts ).replace( / /g, '' ),
+				'h3 gets Tharlon font after applying webfonts even if it does not have lang attribute.'
+			);
 	} );
 
 } )( window.jQuery );

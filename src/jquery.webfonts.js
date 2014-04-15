@@ -174,8 +174,7 @@
 		 * different language than what the element itself has.
 		 */
 		parse: function() {
-			var append,
-				webfonts = this,
+			var webfonts = this,
 				// Fonts can be added indirectly via classes, but also with
 				// style attributes. For lang attributes we will use our font
 				// if they don't have explicit font already.
@@ -186,12 +185,18 @@
 				// Object keys are the font family, values are list of plain elements.
 				elementQueue = {};
 
-			// Append function that keeps the array as a set (no dupes)
-			append = function( array, value ) {
-				if ( $.inArray( value, array ) < 0 ) {
-					array.push( value );
+			// Add to the font queue(no dupes)
+			function addToFontQueue( value ) {
+				if ( $.inArray( value, fontQueue ) < 0 ) {
+					fontQueue.push( value );
 				}
-			};
+			}
+
+			// Add to the font queue
+			function addToElementQueue( element, fontFamily ) {
+				elementQueue[fontFamily] = elementQueue[fontFamily] || [];
+				elementQueue[fontFamily].push( element );
+			}
 
 			$elements.each( function( i, element ) {
 				var fontFamilyStyle, fontFamily,
@@ -207,18 +212,28 @@
 				// Note: It is unclear whether this can ever be falsy. Maybe also
 				// browser specific.
 				if ( fontFamilyStyle ) {
-					fontFamily = fontFamilyStyle.split( ',' )[0];
-
-					// Remove the ' and " characters if any.
-					fontFamily = $.trim( fontFamily.replace( /["']/g, '' ) );
-
-					append( fontQueue, fontFamily );
+					// if it is overridable, override. always.
+					if ( webfonts.isOverridable( fontFamilyStyle ) ) {
+						fontFamily = webfonts.getFont( element.lang || webfonts.language );
+						// We do not have fonts for all languages
+						if ( fontFamily ) {
+							addToFontQueue( fontFamily );
+							addToElementQueue( element, fontFamily );
+						}
+						return;
+					} else {
+						fontFamily = fontFamilyStyle.split( ',' )[0];
+						// Remove the ' and " characters if any.
+						fontFamily = $.trim( fontFamily.replace( /["']/g, '' ) );
+						addToFontQueue( fontFamily );
+					}
 				}
 
 				// Load and apply fonts for other language tagged elements (batched)
 				if ( element.lang && element.lang !== webfonts.language ) {
 					// language differs. We may want to apply a different font.
-					if ( webfonts.hasExplicitFontStyle ( $element ) ) {
+					if ( webfonts.hasExplicitFontStyle ( $element ) &&
+						!webfonts.isOverridable( fontFamilyStyle ) ) {
 						// respect the explicit font family style. Do not override.
 						// This style may be from css, inheritance, or even from
 						// browser settings.
@@ -246,9 +261,8 @@
 
 					// We do not have fonts for all languages
 					if ( fontFamily ) {
-						append( fontQueue, fontFamily );
-						elementQueue[fontFamily] = elementQueue[fontFamily] || [];
-						elementQueue[fontFamily].push( element );
+						addToFontQueue( fontFamily );
+						addToElementQueue( element, fontFamily );
 					}
 				}
 			} );
@@ -275,7 +289,27 @@
 			return this.$element.css( 'fontFamily' ) !== elementFontFamily
 					// whether the element has generic font family
 					&& ( $.inArray( elementFontFamily,
-					['monospace', 'serif', 'cursive','fantasy', 'sans-serif'] ) < 0 );
+					[ 'monospace', 'serif', 'cursive', 'fantasy', 'sans-serif' ] ) < 0 );
+		},
+
+		/**
+		 * Check whether the give font family is overridable or not. jquey.webfonts
+		 * by default does not override any font-family styles other than generic
+		 * font family styles(See hasExplicitFontStyle method)
+		 * @param {string} fontFamily
+		 * @return {boolean} Whether the given fontFamily is overridable or not.
+		 */
+		isOverridable: function( fontFamily ) {
+			var overridableFontFamilies = [ 'monospace', 'serif', 'cursive', 'fantasy', 'sans-serif' ];
+			$.merge( overridableFontFamilies, this.options.overridableFontFamilies );
+			// Browsers like FF put space after comma in font stack. Chrome does not.
+			// Normalise it by removing the spaces and quotes
+			overridableFontFamilies = $.map( overridableFontFamilies, function( item ) {
+				return item.replace( /[\s'"]/g, '' );
+			} );
+			fontFamily = fontFamily.replace( /[\s'"]/g, '' );
+			console.log(fontFamily+':'+overridableFontFamilies);
+			return $.inArray( fontFamily, overridableFontFamilies ) >= 0;
 		},
 
 		/**
@@ -448,7 +482,8 @@
 	$.fn.webfonts.defaults = {
 		repository: WebFonts.repository, // Default font repository
 		fontStack: [ 'Helvetica', 'Arial', 'sans-serif' ], // Default font fallback
-		exclude: '' // jQuery selectors to exclude
+		exclude: '', // jQuery selectors to exclude
+		overridableFontFamilies: []
 	};
 
 	$.fn.webfonts.Constructor = WebFonts;
