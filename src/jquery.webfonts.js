@@ -308,7 +308,6 @@
 				return item.replace( /[\s'"]/g, '' );
 			} );
 			fontFamily = fontFamily.replace( /[\s'"]/g, '' );
-			console.log(fontFamily+':'+overridableFontFamilies);
 			return $.inArray( fontFamily, overridableFontFamilies ) >= 0;
 		},
 
