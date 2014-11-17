@@ -423,6 +423,11 @@
 				fontFaceRule += 'local(\'' + fontFamily + '\'),';
 			}
 
+			if ( fontconfig.woff2 ) {
+				fontFormats.push( '\t\turl(\'' + base + fontconfig.woff2 + versionSuffix
+					+ '\') format(\'woff2\')' );
+			}
+
 			if ( fontconfig.woff ) {
 				fontFormats.push( '\t\turl(\'' + base + fontconfig.woff + versionSuffix
 					+ '\') format(\'woff\')' );
