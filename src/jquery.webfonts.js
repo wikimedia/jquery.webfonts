@@ -57,14 +57,14 @@
 
 		/**
 		 * Get the default font family for given language.
-		 * @param {String} language Language code.
+		 * @param {String|undefined} language Language code.
 		 * @param {array} classes
 		 * @return {String} Font family name
 		 */
 		getFont: function( language, classes ) {
-			language = ( language || this.language ).toLowerCase();
+			language = ( language || this.language || '' ).toLowerCase();
 
-			if ( this.options.fontSelector ) {
+			if ( this.options.fontSelector && language ) {
 				return this.options.fontSelector( this.repository, language, classes );
 			} else {
 				return this.repository.defaultFont( language );
