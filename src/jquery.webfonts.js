@@ -387,7 +387,7 @@
 		 * @return {String} CSS
 		 */
 		getCSS: function( fontFamily, variant ) {
-			var webfonts, base, version, versionSuffix,
+			var webfonts, base,
 				fontFaceRule, userAgent, fontStyle, fontFormats,
 				fontconfig = this.repository.get( fontFamily );
 
@@ -404,15 +404,13 @@
 			}
 
 			base = this.repository.base;
-			version = fontconfig.version;
-			versionSuffix = '?version=' + version;
 			fontFaceRule = '@font-face { font-family: \'' + fontFamily + '\';\n';
 			userAgent = window.navigator.userAgent;
 			fontStyle = fontconfig.fontstyle || 'normal';
 			fontFormats = [];
 
 			if ( fontconfig.eot ) {
-				fontFaceRule += '\tsrc: url(\'' + base + fontconfig.eot + versionSuffix + '\');\n';
+				fontFaceRule += '\tsrc: url(\'' + base + fontconfig.eot + '\');\n';
 			}
 			fontFaceRule += '\tsrc: ';
 
@@ -424,22 +422,22 @@
 			}
 
 			if ( fontconfig.woff2 ) {
-				fontFormats.push( '\t\turl(\'' + base + fontconfig.woff2 + versionSuffix
+				fontFormats.push( '\t\turl(\'' + base + fontconfig.woff2
 					+ '\') format(\'woff2\')' );
 			}
 
 			if ( fontconfig.woff ) {
-				fontFormats.push( '\t\turl(\'' + base + fontconfig.woff + versionSuffix
+				fontFormats.push( '\t\turl(\'' + base + fontconfig.woff
 					+ '\') format(\'woff\')' );
 			}
 
 			if ( fontconfig.svg ) {
-				fontFormats.push( '\t\turl(\'' + base + fontconfig.svg + versionSuffix + '#'
+				fontFormats.push( '\t\turl(\'' + base + fontconfig.svg + '#'
 					+ fontFamily + '\') format(\'svg\')' );
 			}
 
 			if ( fontconfig.ttf ) {
-				fontFormats.push( '\t\turl(\'' + base + fontconfig.ttf + versionSuffix
+				fontFormats.push( '\t\turl(\'' + base + fontconfig.ttf
 					+ '\') format(\'truetype\')' );
 			}
 
