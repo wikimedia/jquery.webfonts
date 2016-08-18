@@ -388,13 +388,15 @@
 		 */
 		getCSS: function( fontFamily, variant ) {
 			var webfonts, base,
-				fontFaceRule, userAgent, fontStyle, fontFormats,
+				fontFaceRule, userAgent, fontStyle, fontFormats, fullFontName,
 				fontconfig = this.repository.get( fontFamily );
 
 			variant = variant || 'normal';
+			fullFontName = fontFamily;
 
 			if ( variant !== 'normal' ) {
 				if ( fontconfig.variants !== undefined && fontconfig.variants[variant] ) {
+					fullFontName = fontconfig.variants[variant];
 					fontconfig = this.repository.get( fontconfig.variants[variant] );
 				}
 			}
@@ -418,7 +420,7 @@
 			if ( userAgent.match( /Android 2\.3/ ) === null ) {
 				// Android 2.3.x does not respect local() syntax.
 				// http://code.google.com/p/android/issues/detail?id=10609
-				fontFaceRule += 'local(\'' + fontFamily + '\'),';
+				fontFaceRule += 'local(\'' + fullFontName + '\'),';
 			}
 
 			if ( fontconfig.woff2 ) {
