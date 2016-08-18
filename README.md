@@ -40,8 +40,9 @@ or, with PHP
 php -S localhost:8000
 ```
 and, you can run tests from
-```bash
+```
 http://localhost:8000/tests/
+```
 
 Since some browsers will not be able to load JSON using AJAX if you run the
 tests as local files (file://), so you should run them from a web server
