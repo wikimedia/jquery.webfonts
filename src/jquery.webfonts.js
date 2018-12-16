@@ -293,9 +293,9 @@
 		},
 
 		/**
-		 * Check whether the give font family is overridable or not. jquey.webfonts
+		 * Check whether the given font family is overridable or not. jquery.webfonts
 		 * by default does not override any font-family styles other than generic
-		 * font family styles(See hasExplicitFontStyle method)
+		 * font family styles (see hasExplicitFontStyle method).
 		 * @param {string} fontFamily
 		 * @return {boolean} Whether the given fontFamily is overridable or not.
 		 */
