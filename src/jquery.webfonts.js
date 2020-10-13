@@ -200,7 +200,8 @@
 
 			$elements.each( function( i, element ) {
 				var fontFamilyStyle, fontFamily,
-					$element = $( element );
+					$element = $( element ),
+					elementLanguage = element.attributes.lang;
 
 				if ( $element.is( webfonts.options.exclude ) ) {
 					return;
@@ -214,7 +215,7 @@
 				if ( fontFamilyStyle ) {
 					// if it is overridable, override. always.
 					if ( webfonts.isOverridable( fontFamilyStyle ) ) {
-						fontFamily = webfonts.getFont( element.lang || webfonts.language );
+						fontFamily = webfonts.getFont( elementLanguage || webfonts.language );
 						// We do not have fonts for all languages
 						if ( fontFamily ) {
 							addToFontQueue( fontFamily );
@@ -230,7 +231,7 @@
 				}
 
 				// Load and apply fonts for other language tagged elements (batched)
-				if ( element.lang && element.lang !== webfonts.language ) {
+				if ( elementLanguage && elementLanguage !== webfonts.language ) {
 					// language differs. We may want to apply a different font.
 					if ( webfonts.hasExplicitFontStyle ( $element ) &&
 						!webfonts.isOverridable( fontFamilyStyle ) ) {
@@ -239,7 +240,7 @@
 						// browser settings.
 						return;
 					} else {
-						fontFamily = webfonts.getFont( element.lang, element.className.split(/\s+/) );
+						fontFamily = webfonts.getFont( elementLanguage, element.className.split(/\s+/) );
 					}
 
 					if ( !fontFamily ) {
