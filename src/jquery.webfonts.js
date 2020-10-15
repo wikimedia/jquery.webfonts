@@ -201,7 +201,7 @@
 			$elements.each( function( i, element ) {
 				var fontFamilyStyle, fontFamily,
 					$element = $( element ),
-					elementLanguage = element.attributes.lang;
+					elementLanguage = element.getAttribute( 'lang' );
 
 				if ( $element.is( webfonts.options.exclude ) ) {
 					return;
