@@ -225,7 +225,7 @@
 					} else {
 						fontFamily = fontFamilyStyle.split( ',' )[0];
 						// Remove the ' and " characters if any.
-						fontFamily = $.trim( fontFamily.replace( /["']/g, '' ) );
+						fontFamily = fontFamily.replace( /["']/g, '' ).trim();
 						addToFontQueue( fontFamily );
 					}
 				}
